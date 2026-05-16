@@ -1,0 +1,2788 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 快速学习手册</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f7f3ea;
+      --paper-strong: #fffaf0;
+      --ink: #22211e;
+      --muted: #6f695f;
+      --line: #ded3c0;
+      --accent: #b6422c;
+      --accent-soft: #f1d2c8;
+      --blue: #356d8a;
+      --green: #4b7356;
+      --gold: #a97622;
+      --shadow: 0 18px 60px rgba(65, 52, 35, 0.12);
+      --radius: 8px;
+      --sidebar: 292px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(222, 211, 192, 0.28) 1px, transparent 1px) 0 0 / 84px 84px,
+        linear-gradient(180deg, rgba(255, 250, 240, 0.88), var(--paper));
+      font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", Georgia, serif;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 28px 22px;
+      border-right: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.84);
+      backdrop-filter: blur(12px);
+      overflow: auto;
+    }
+
+    .brand {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 30px;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: var(--paper-strong);
+      background: var(--ink);
+      border-radius: 50%;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .nav-title {
+      margin: 22px 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 4px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .nav-list a {
+      display: block;
+      padding: 9px 10px;
+      color: var(--ink);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .nav-list a:hover,
+    .nav-list a:focus,
+    .nav-list a.is-active {
+      outline: 0;
+      background: var(--accent-soft);
+    }
+
+    .nav-tree {
+      display: grid;
+      gap: 3px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .nav-tree a {
+      display: block;
+      padding: 8px 10px;
+      color: var(--ink);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .nav-parent {
+      display: block;
+      padding: 8px 10px;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .nav-tree a:hover,
+    .nav-tree a:focus,
+    .nav-tree a.is-active {
+      outline: 0;
+      background: var(--accent-soft);
+    }
+
+    .nav-tree .child a {
+      padding-left: 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.is-active {
+      display: block;
+    }
+
+    .hero.page {
+      display: none;
+    }
+
+    .hero.page.is-active {
+      display: grid;
+    }
+
+    .hero {
+      min-height: 72vh;
+      display: grid;
+      align-items: end;
+      padding: clamp(42px, 7vw, 86px) clamp(22px, 6vw, 88px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-inner {
+      max-width: 980px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 2px;
+      background: currentColor;
+    }
+
+    .hero h2 {
+      margin: 0;
+      max-width: 900px;
+      font-size: clamp(40px, 7vw, 92px);
+      line-height: 0.98;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2.1vw, 22px);
+      line-height: 1.75;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 16px;
+      border: 1px solid var(--ink);
+      border-radius: 6px;
+      color: var(--paper-strong);
+      background: var(--ink);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button.secondary {
+      color: var(--ink);
+      background: transparent;
+    }
+
+    .section {
+      padding: clamp(42px, 6vw, 78px) clamp(22px, 6vw, 88px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-heading {
+      max-width: 820px;
+      margin-bottom: 28px;
+    }
+
+    .section-heading h2 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .chapter {
+      min-height: 230px;
+      padding: 22px;
+      background: rgba(255, 250, 240, 0.9);
+    }
+
+    .chapter small {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .chapter h3 {
+      margin: 12px 0 14px;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .chapter ul {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .module-stack {
+      display: grid;
+      gap: 22px;
+    }
+
+    .module {
+      display: block;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: clamp(26px, 5vw, 56px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 250, 240, 0.78);
+      scroll-margin-top: 88px;
+    }
+
+    .module.page {
+      display: none;
+    }
+
+    .module.page.is-active {
+      display: block;
+    }
+
+    .module-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .module-kicker::before {
+      content: "";
+      width: 30px;
+      height: 2px;
+      background: currentColor;
+    }
+
+    .module h3 {
+      margin: 16px 0 18px;
+      max-width: 760px;
+      font-size: clamp(34px, 5vw, 68px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .module-intro {
+      margin: 0;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 19px;
+      line-height: 1.75;
+    }
+
+    .module-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      margin-top: clamp(30px, 5vw, 58px);
+      border-top: 1px solid var(--line);
+    }
+
+    .module-detail {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      padding: clamp(22px, 3.8vw, 36px) 0;
+      border-top: 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+    }
+
+    .module-detail strong {
+      display: block;
+      margin-bottom: 0;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.3;
+      position: static;
+      height: auto;
+    }
+
+    .module-detail p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.72;
+    }
+
+    .module-detail ul {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 1.72;
+    }
+
+    .module-detail li::marker {
+      color: var(--accent);
+    }
+
+    .module-detail .lead {
+      margin-bottom: 10px;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.72;
+    }
+
+    .module-detail.case {
+      border-bottom-color: var(--accent-soft);
+    }
+
+    .source-panel {
+      margin-top: clamp(24px, 4vw, 42px);
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .source-panel strong {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .source-panel ul {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 18px;
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .source-panel a {
+      color: var(--accent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    .source-note {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .tool-row {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto;
+      gap: 14px;
+      padding: 16px clamp(22px, 6vw, 88px);
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 243, 234, 0.9);
+      backdrop-filter: blur(14px);
+    }
+
+    .search {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--ink);
+      background: var(--paper-strong);
+    }
+
+    .search:focus {
+      outline: 2px solid var(--accent-soft);
+      border-color: var(--accent);
+    }
+
+    .tag-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .tag {
+      min-height: 36px;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: var(--paper-strong);
+      cursor: pointer;
+    }
+
+    .tag[aria-pressed="true"] {
+      color: var(--paper-strong);
+      border-color: var(--ink);
+      background: var(--ink);
+    }
+
+    .term-map {
+      margin: 0 clamp(22px, 6vw, 88px) clamp(22px, 4vw, 40px);
+      padding: clamp(20px, 3vw, 34px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 250, 240, 0.78);
+    }
+
+    .term-map-header {
+      max-width: 780px;
+      margin-bottom: 22px;
+    }
+
+    .term-map-header h3 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 3vw, 36px);
+      line-height: 1.15;
+    }
+
+    .term-map-header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .term-map-canvas {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(130px, 1fr));
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .map-column {
+      position: relative;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      min-height: 270px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: rgba(247, 243, 234, 0.7);
+    }
+
+    .map-column:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -12px;
+      width: 12px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .map-column strong {
+      color: var(--accent);
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
+    .map-node {
+      display: block;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: var(--paper-strong);
+      font-size: 13px;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .map-node.primary {
+      color: var(--paper-strong);
+      border-color: var(--ink);
+      background: var(--ink);
+    }
+
+    .map-node.accent {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .map-side {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .map-side-group {
+      display: grid;
+      gap: 9px;
+      padding: 14px;
+      border: 1px dashed var(--line);
+      background: rgba(255, 250, 240, 0.58);
+    }
+
+    .map-side-group strong {
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .map-side-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .terms-workspace {
+      display: grid;
+      grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.1fr);
+      gap: clamp(18px, 3vw, 34px);
+      align-items: start;
+      padding: clamp(22px, 4vw, 42px) clamp(22px, 6vw, 88px);
+      min-height: calc(100vh - 82px);
+    }
+
+    .terms-list {
+      display: grid;
+      gap: 10px;
+      max-height: calc(100vh - 118px);
+      overflow: auto;
+      padding-right: 4px;
+      scrollbar-gutter: stable;
+    }
+
+    .terms-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .term-card {
+      display: grid;
+      gap: 10px;
+      width: 100%;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 250, 240, 0.92);
+      box-shadow: 0 1px 0 rgba(34, 33, 30, 0.04);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+
+    .term-card:hover,
+    .term-card:focus {
+      outline: 0;
+      border-color: var(--accent);
+      background: var(--paper-strong);
+    }
+
+    .term-card.is-active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      transform: translateX(3px);
+    }
+
+    .term-card.is-hidden {
+      display: none;
+    }
+
+    .term-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .term-card h3 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .term-index {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .term-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .term-card strong {
+      color: var(--ink);
+    }
+
+    .pill {
+      width: fit-content;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: var(--ink);
+      background: var(--accent-soft);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .term-detail-panel {
+      position: sticky;
+      top: 82px;
+      display: grid;
+      gap: 22px;
+      min-height: 620px;
+      max-height: calc(100vh - 104px);
+      overflow: auto;
+      padding: clamp(24px, 4vw, 42px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 250, 240, 0.88);
+      box-shadow: var(--shadow);
+      scrollbar-gutter: stable;
+    }
+
+    .term-detail-header {
+      display: grid;
+      gap: 12px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .term-detail-header h3 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 64px);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .term-detail-summary {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.75;
+    }
+
+    .term-detail-section {
+      display: grid;
+      gap: 10px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .term-detail-section:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .term-detail-section h4 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .term-detail-section p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.72;
+    }
+
+    .term-detail-section ul {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .term-detail-section li::marker {
+      color: var(--accent);
+    }
+
+    .related-terms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .related-term {
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: var(--paper-strong);
+      cursor: pointer;
+    }
+
+    .related-term:hover,
+    .related-term:focus {
+      outline: 0;
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .route {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: clamp(20px, 5vw, 64px);
+      align-items: start;
+    }
+
+    .route-panel {
+      position: sticky;
+      top: 88px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .route-panel h3 {
+      margin: 0 0 12px;
+      font-size: 30px;
+      line-height: 1.15;
+    }
+
+    .route-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .timeline li {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .timeline h4 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .timeline p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .empty {
+      display: none;
+      padding: 28px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: rgba(255, 250, 240, 0.68);
+    }
+
+    .empty.is-visible {
+      display: block;
+    }
+
+    footer {
+      padding: 28px clamp(22px, 6vw, 88px);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 1080px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .nav-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .chapter-grid,
+      .source-panel ul {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .term-map-canvas {
+        grid-template-columns: 1fr;
+      }
+
+      .map-column {
+        min-height: auto;
+      }
+
+      .map-column:not(:last-child)::after {
+        top: auto;
+        right: 50%;
+        bottom: -12px;
+        width: 1px;
+        height: 12px;
+      }
+
+      .map-side {
+        grid-template-columns: 1fr;
+      }
+
+      .terms-workspace {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .term-detail-panel {
+        position: static;
+        min-height: auto;
+        max-height: none;
+        overflow: visible;
+      }
+
+      .terms-list {
+        max-height: none;
+        overflow: visible;
+        padding-right: 0;
+      }
+
+      .module {
+        max-width: none;
+      }
+
+      .module-detail {
+        grid-template-columns: 1fr;
+      }
+
+      .route {
+        grid-template-columns: 1fr;
+      }
+
+      .route-panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hero {
+        min-height: 62vh;
+      }
+
+      .tool-row {
+        position: static;
+        grid-template-columns: 1fr;
+      }
+
+      .tag-bar {
+        justify-content: flex-start;
+      }
+
+      .chapter-grid,
+      .source-panel ul,
+      .nav-list {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline li {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" aria-label="章节导航">
+      <div class="brand">
+        <div class="brand-mark">AI</div>
+        <h1>AI 快速学习手册</h1>
+        <p>面向非技术同学和个人学习场景，快速理解 AI 热词、AI Coding 与 Agentic Engineering。</p>
+      </div>
+
+      <ol class="nav-tree">
+        <li><a href="#overview">文档简介</a></li>
+        <li><a href="#terms">核心词条</a></li>
+        <li><span class="nav-parent">核心模块</span></li>
+        <li class="child"><a href="#module-foundation">AI 基础认知</a></li>
+        <li class="child"><a href="#module-llm">大模型 LLM</a></li>
+        <li class="child"><a href="#module-model-ecosystem">模型与产品生态</a></li>
+        <li class="child"><a href="#module-prompt">Prompt 工程</a></li>
+        <li class="child"><a href="#module-context">上下文管理</a></li>
+        <li class="child"><a href="#module-rag">RAG</a></li>
+        <li class="child"><a href="#module-knowledge">知识库</a></li>
+        <li class="child"><a href="#module-agent">Agent</a></li>
+        <li class="child"><a href="#module-agent-ecosystem">Agent 工具生态</a></li>
+        <li class="child"><a href="#module-tools">工具调用</a></li>
+        <li class="child"><a href="#module-mcp">MCP</a></li>
+        <li class="child"><a href="#module-skill">Skill</a></li>
+        <li class="child"><a href="#module-harness">Agent Harness</a></li>
+        <li class="child"><a href="#module-coding">AI Coding 工作流</a></li>
+        <li class="child"><a href="#module-agentic">Agentic Engineering</a></li>
+      </ol>
+    </aside>
+
+    <main>
+      <section class="hero page" id="top" data-page="top">
+        <div class="hero-inner">
+          <div class="eyebrow">v1.3 HTML Prototype</div>
+          <h2>把 AI 热词整理成一张能持续生长的学习地图</h2>
+          <p class="hero-copy">这不是技术百科，而是一份适合快速理解、反复查阅、持续维护的手册。先用统一框架讲清楚概念，再用词条卡片和学习路线帮助你把知识串起来。</p>
+          <div class="hero-actions">
+            <a class="button" href="#module-foundation">开始阅读模块</a>
+            <a class="button secondary" href="#terms">查看核心词条</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section page" id="overview" data-page="overview">
+        <div class="section-heading">
+          <h2>这份手册讲什么</h2>
+          <p>如果你经常听到大模型、RAG、Agent、MCP、AI Coding 这些词，但还没形成完整理解，这份手册会帮你用通俗语言把它们串起来：知道它们是什么、能解决什么问题、适合什么场景，以及落地时要注意什么。</p>
+        </div>
+
+        <div class="chapter-grid" aria-label="章节列表">
+          <article class="chapter">
+            <small>01</small>
+            <h3>AI 基础认知</h3>
+            <ul>
+              <li>先分清 AI、大模型和生成式 AI，不再把它们混成一个概念。</li>
+              <li>理解 AI 适合做什么，也知道哪些事情不能完全交给它。</li>
+              <li>建立非技术同学也能使用的判断框架。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>02</small>
+            <h3>AI 热词速查</h3>
+            <ul>
+              <li>把常见热词放在一处，遇到不懂的词可以快速查。</li>
+              <li>每个词都用一句话先讲明白，再补充场景和误区。</li>
+              <li>适合开会、看文章、研究工具时随手对照。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>03</small>
+            <h3>大模型 LLM</h3>
+            <ul>
+              <li>用不写公式的方式理解 Token、上下文窗口和生成机制。</li>
+              <li>知道为什么大模型会“看起来很懂”，也会一本正经地出错。</li>
+              <li>学会判断一个模型能力强不强，不能只看演示效果。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>04</small>
+            <h3>模型与产品生态</h3>
+            <ul>
+              <li>把 ChatGPT、Claude、Gemini、DeepSeek、Qwen、Llama 放到同一张图里看。</li>
+              <li>分清“模型家族”和“面向用户的产品”不是一回事。</li>
+              <li>选工具时先看场景，而不是只追最新名字。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>05</small>
+            <h3>Prompt 工程</h3>
+            <ul>
+              <li>把“帮我写一下”变成 AI 真能执行的任务说明。</li>
+              <li>学会给角色、目标、限制、格式和例子。</li>
+              <li>减少反复改来改去，让输出更稳定。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>06</small>
+            <h3>上下文管理</h3>
+            <ul>
+              <li>理解 AI 为什么有时“不记得”或“没看见”。</li>
+              <li>学会给它足够但不过量的资料、背景和历史信息。</li>
+              <li>避免把一堆无关内容塞进去，反而让结果变差。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>07</small>
+            <h3>RAG</h3>
+            <ul>
+              <li>理解“让 AI 先查资料再回答”到底是怎么回事。</li>
+              <li>知道它为什么常用于企业知识库和客服问答。</li>
+              <li>看懂检索、引用和减少幻觉之间的关系。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>08</small>
+            <h3>知识库</h3>
+            <ul>
+              <li>知道知识库不是把文档堆到一起就完事。</li>
+              <li>理解资料质量、权限、更新和切分为什么重要。</li>
+              <li>能判断一个知识库问答项目为什么好用或不好用。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>09</small>
+            <h3>Agent</h3>
+            <ul>
+              <li>理解 AI 如何从“回答问题”走向“帮你做事”。</li>
+              <li>看懂目标、计划、记忆和反馈在 Agent 中的作用。</li>
+              <li>知道什么时候必须让人来确认，不能全自动。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>10</small>
+            <h3>Agent 工具生态</h3>
+            <ul>
+              <li>把 Claude Code、Codex、OpenCode、OpenClaw、Hermes 等放在一起比较。</li>
+              <li>知道不同 Agent 工具偏向代码、桌面、本地自动化还是 DevOps。</li>
+              <li>生态变化很快，重要工具需要回到官方来源核验。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>11</small>
+            <h3>工具调用</h3>
+            <ul>
+              <li>理解 AI 怎么查询订单、读文件、调用接口或运行脚本。</li>
+              <li>知道工具调用为什么是 Agent 落地的关键能力。</li>
+              <li>看清权限边界，避免 AI 做了不该做的事。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>12</small>
+            <h3>MCP</h3>
+            <ul>
+              <li>理解 MCP 为什么被称为 AI 应用连接外部系统的标准方式。</li>
+              <li>看懂 Tools、Resources、Prompts 分别解决什么问题。</li>
+              <li>知道它和普通插件、API 调用有什么关系。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>13</small>
+            <h3>Skill</h3>
+            <ul>
+              <li>理解 Skill 为什么像“给 AI 的任务方法说明书”。</li>
+              <li>知道如何把团队经验沉淀成可复用流程。</li>
+              <li>让 AI 做固定任务时更稳定，不用每次重新教一遍。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>14</small>
+            <h3>Agent Harness</h3>
+            <ul>
+              <li>理解 harness 不是某个模型，而是让 Agent 稳定运行的支架。</li>
+              <li>看懂状态、权限、评估、恢复和监控为什么重要。</li>
+              <li>区分“harness 方法”和 Harness 这家公司/平台。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>15</small>
+            <h3>AI Coding 工作流</h3>
+            <ul>
+              <li>理解 AI Coding 不是“自动写代码”，而是新的协作方式。</li>
+              <li>学会描述需求、提供代码上下文、审查 AI 改动。</li>
+              <li>看懂从需求到代码修改再到验证的完整流程。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>16</small>
+            <h3>Agentic Engineering</h3>
+            <ul>
+              <li>理解为什么 AI 能做事以后，工程设计比 Prompt 更重要。</li>
+              <li>看懂评估、日志、权限、回滚和人工确认的必要性。</li>
+              <li>知道如何设计一个可控的人机协作系统。</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>17</small>
+            <h3>工程要求</h3>
+            <ul>
+              <li>知道一个 AI 项目为什么不能只看模型效果。</li>
+              <li>理解数据、权限、成本、延迟和准确率都会影响落地。</li>
+              <li>上线前要有评估、兜底和责任边界。</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="section-heading" style="margin-top: clamp(42px, 6vw, 72px);">
+          <h2>内容依据</h2>
+          <p>为了避免只凭感觉解释概念，手册会优先参考 OpenAI、Anthropic、Google、MCP 以及主流项目文档。官方文档负责定义概念和能力边界；这份手册负责把它们翻译成更容易理解的学习语言，并补充适合日常工作讨论的例子。</p>
+        </div>
+        <div class="source-panel">
+          <strong>主要官方参考</strong>
+          <ul>
+            <li><a href="https://platform.openai.com/docs/concepts/text-generation-models" target="_blank" rel="noreferrer">OpenAI API：文本生成模型关键概念</a></li>
+            <li><a href="https://platform.openai.com/docs/guides/prompting" target="_blank" rel="noreferrer">OpenAI API：Prompting</a></li>
+            <li><a href="https://platform.openai.com/docs/guides/function-calling" target="_blank" rel="noreferrer">OpenAI API：Function Calling / Tool Calling</a></li>
+            <li><a href="https://platform.openai.com/docs/guides/structured-outputs" target="_blank" rel="noreferrer">OpenAI API：Structured Outputs</a></li>
+            <li><a href="https://platform.openai.com/docs/guides/retrieval" target="_blank" rel="noreferrer">OpenAI API：Retrieval 与 Vector Stores</a></li>
+            <li><a href="https://platform.openai.com/docs/guides/code-generation" target="_blank" rel="noreferrer">OpenAI API：Code Generation</a></li>
+            <li><a href="https://openai.com/chatgpt/enterprise/" target="_blank" rel="noreferrer">OpenAI：ChatGPT Enterprise</a></li>
+            <li><a href="https://platform.openai.com/docs/codex" target="_blank" rel="noreferrer">OpenAI：Codex</a></li>
+            <li><a href="https://openai.github.io/openai-agents-python/guardrails/" target="_blank" rel="noreferrer">OpenAI Agents SDK：Guardrails</a></li>
+            <li><a href="https://openai.github.io/openai-agents-python/tracing/" target="_blank" rel="noreferrer">OpenAI Agents SDK：Tracing</a></li>
+            <li><a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="noreferrer">MCP 官方文档：What is MCP?</a></li>
+            <li><a href="https://modelcontextprotocol.io/docs/learn/server-concepts" target="_blank" rel="noreferrer">MCP 官方文档：Tools / Resources / Prompts</a></li>
+            <li><a href="https://code.claude.com/docs/en/overview" target="_blank" rel="noreferrer">Anthropic：Claude Code</a></li>
+            <li><a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank" rel="noreferrer">Anthropic：Claude Models</a></li>
+            <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/context-windows" target="_blank" rel="noreferrer">Anthropic：Context Windows</a></li>
+            <li><a href="https://docs.anthropic.com/en/docs/prompt-engineering" target="_blank" rel="noreferrer">Anthropic：Prompt Engineering</a></li>
+            <li><a href="https://gemini.google/overview/" target="_blank" rel="noreferrer">Google：Gemini Overview</a></li>
+            <li><a href="https://docs.langchain.com/langgraph" target="_blank" rel="noreferrer">LangGraph：Overview</a></li>
+            <li><a href="https://microsoft.github.io/autogen/stable/index.html" target="_blank" rel="noreferrer">Microsoft AutoGen：Docs</a></li>
+            <li><a href="https://developer.harness.io/docs/platform/harness-ai/harness-agents/" target="_blank" rel="noreferrer">Harness Developer Hub：Harness Agents</a></li>
+          </ul>
+        </div>
+
+        <div class="section-heading" style="margin-top: clamp(42px, 6vw, 72px);">
+          <h2>怎么开始读</h2>
+          <p>不需要从头背术语。更好的方式是先建立整体地图，再按自己关心的场景深入：想理解 AI 产品，就先看基础、RAG、Agent；想用 AI 做开发，就重点看上下文、AI Coding 和 Agentic Engineering。</p>
+        </div>
+        <ol class="timeline">
+          <li>
+            <div>
+              <h4>速览 AI 地图</h4>
+              <p>先快速看一遍 AI、生成式 AI、大语言模型、Prompt、RAG、Agent、AI Coding、Agentic Engineering，建立最基本的知识地图。</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h4>建立概念边界</h4>
+              <p>再补齐 Token、上下文窗口、幻觉、Embedding、向量数据库、Tool Use、Human-in-the-loop 和 Evaluation，知道哪些词容易混淆。</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h4>形成可讨论框架</h4>
+              <p>带着自己的业务或学习场景读核心模块，尝试判断哪些问题适合 RAG，哪些适合 Workflow，哪些才需要 Agent。</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h4>持续维护知识库</h4>
+              <p>以后遇到新词，不急着收藏一堆文章，先按“是什么、解决什么问题、适合什么场景、有什么限制”补进这份手册。</p>
+            </div>
+          </li>
+        </ol>
+
+        <div class="section-heading" style="margin-top: clamp(42px, 6vw, 72px);">
+          <h2>后续怎么更新</h2>
+          <p>AI 相关概念会不断变化，所以这份手册不追求一次写完。它会像个人知识库一样持续生长：先保证核心框架清楚，再不断补充新词、案例、官方参考和自己的理解。</p>
+        </div>
+        <div class="chapter-grid">
+          <article class="chapter">
+            <small>v0.1</small>
+            <h3>信息架构</h3>
+            <ul>
+              <li>确认目录和章节模板</li>
+              <li>确定非技术友好的表达方式</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>v0.2</small>
+            <h3>核心词条</h3>
+            <ul>
+              <li>完成基础词条并持续扩展</li>
+              <li>可导入飞书文档继续扩写</li>
+            </ul>
+          </article>
+          <article class="chapter">
+            <small>v1.3</small>
+            <h3>生态与 Harness</h3>
+            <ul>
+              <li>新增模型与产品生态</li>
+              <li>新增 Agent 工具生态与 Harness</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section page" id="modules" data-page="modules">
+        <div class="module-stack">
+          <article class="module page is-active" id="module-foundation" data-module-page>
+            <div>
+              <span class="module-kicker">01 / Foundation</span>
+              <h3>AI 基础认知</h3>
+              <p class="module-intro">先建立正确预期：AI 不是单个工具，而是一类可以嵌入工作流的理解、生成和辅助执行能力。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">AI 是一类让机器承担“理解、生成、判断、规划、执行”任务的技术集合。</p>
+                <ul>
+                  <li>传统 AI 更偏识别、分类、预测，例如推荐系统、风控模型和图像识别。</li>
+                  <li>生成式 AI 更偏创造和表达，例如生成文本、图片、音频、视频和代码。</li>
+                  <li>大语言模型是当前最常见的能力底座，很多 AI 产品其实是在大模型上接入数据、工具和业务流程。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>信息处理：总结长文、提取重点、对比材料、生成表格。</li>
+                  <li>表达生成：写初稿、改写语气、生成标题、整理汇报结构。</li>
+                  <li>辅助判断：提出备选方案、拆解问题、识别风险，但最终判断仍应由人负责。</li>
+                  <li>任务执行：接入工具后，可以搜索、读文件、调用接口、修改代码或触发流程。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>个人学习：解释概念、生成学习路线、整理笔记、模拟问答。</li>
+                  <li>办公提效：会议纪要、周报、方案初稿、资料归纳。</li>
+                  <li>业务协作：用户反馈归类、竞品分析、客服知识库、运营活动文案。</li>
+                  <li>研发协作：需求拆解、代码解释、Bug 排查、测试生成。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>事实风险：回答可能看起来合理，但没有真实依据。</li>
+                  <li>上下文风险：如果背景资料不完整，AI 会按默认经验补全，容易偏离业务。</li>
+                  <li>责任风险：AI 可以辅助判断，但不能替代责任主体。</li>
+                  <li>执行风险：一旦 AI 能调用工具，误操作、越权和数据泄露都需要被控制。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>先定义任务类型：是生成内容、查资料、做分析，还是执行动作。</li>
+                  <li>再补充上下文：目标、受众、业务背景、已有资料、不能触碰的边界。</li>
+                  <li>最后设定验收：输出格式、判断标准、需要引用的来源、需要人工确认的部分。</li>
+                  <li>重要任务采用“AI 生成草案，人类核查定稿”的协作方式。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：用 AI 辅助做一份竞品分析。</p>
+                <ul>
+                  <li>第一步：让 AI 根据产品目标生成竞品分析维度，例如用户群、核心功能、价格、转化路径和差异化。</li>
+                  <li>第二步：提供你已经收集的网页、截图、访谈记录，让 AI 按维度整理信息。</li>
+                  <li>第三步：要求 AI 标出“已知事实”和“推测判断”，避免把猜测当结论。</li>
+                  <li>第四步：由你补充业务判断，形成最终建议和下一步行动。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方参考</strong>
+              <ul>
+                <li><a href="https://platform.openai.com/docs/concepts/text-generation-models" target="_blank" rel="noreferrer">OpenAI：文本生成模型关键概念</a></li>
+                <li><a href="https://platform.openai.com/docs/models" target="_blank" rel="noreferrer">OpenAI：Models</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-llm" data-module-page>
+            <div>
+              <span class="module-kicker">02 / LLM</span>
+              <h3>大模型 LLM</h3>
+              <p class="module-intro">理解大模型不需要先学数学，先抓住三个关键词：Token、上下文窗口、生成概率。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">大语言模型是用海量文本和代码训练出的语言能力系统。</p>
+                <ul>
+                  <li>它把输入内容切成 Token，并在上下文范围内计算接下来更可能出现的内容。</li>
+                  <li>它不是按数据库查询答案，而是基于训练中学到的语言、知识和模式生成回答。</li>
+                  <li>模型越大通常意味着参数、训练数据和计算规模更大，但实际效果还取决于训练质量和产品设计。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>语言理解：识别意图、理解问题、提取结构和关系。</li>
+                  <li>语言生成：写作、总结、翻译、改写、风格迁移。</li>
+                  <li>推理辅助：拆解问题、列出假设、给出方案比较，但复杂推理仍需验证。</li>
+                  <li>代码能力：解释代码、生成片段、修复错误、补充测试。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>内容和知识：问答、文档总结、课程讲义、知识库助手。</li>
+                  <li>沟通和表达：邮件、汇报、文案、客服回复、翻译。</li>
+                  <li>工作流入口：把自然语言转换成系统动作，例如查询、创建、分类或生成配置。</li>
+                  <li>研发辅助：代码解释、需求转任务、错误定位、测试建议。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>知识边界：训练知识可能过期，未接入检索时无法保证最新事实。</li>
+                  <li>上下文边界：一次能看的内容有限，长任务需要分段和总结。</li>
+                  <li>可靠性边界：模型倾向生成流畅答案，但流畅不代表正确。</li>
+                  <li>成本边界：长输入、高频调用和强模型都会带来成本和延迟。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>判断模型时，看四件事：准确性、稳定性、速度、成本。</li>
+                  <li>事实问题优先接入 RAG 或搜索；格式问题优先用结构化输出；风格问题再考虑微调。</li>
+                  <li>复杂任务要分阶段：理解任务、生成计划、执行步骤、检查结果。</li>
+                  <li>把模型当“能力层”，而不是完整产品。产品还需要数据、交互、权限、评估和兜底。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：用大模型辅助生成课程讲义。</p>
+                <ul>
+                  <li>输入课程目标、受众基础、课时长度和已有资料。</li>
+                  <li>先让模型生成大纲，再让它逐章补充讲解、例子和练习题。</li>
+                  <li>要求模型标出需要人工核查的事实、数据和引用。</li>
+                  <li>最终由教师或负责人审查内容准确性和教学节奏。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方参考</strong>
+              <ul>
+                <li><a href="https://platform.openai.com/docs/guides/chat-completions" target="_blank" rel="noreferrer">OpenAI：Text generation</a></li>
+                <li><a href="https://platform.openai.com/docs/concepts/text-generation-models" target="_blank" rel="noreferrer">OpenAI：Key concepts</a></li>
+                <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/context-windows" target="_blank" rel="noreferrer">Anthropic：Context windows</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-model-ecosystem" data-module-page>
+            <div>
+              <span class="module-kicker">03 / Model Ecosystem</span>
+              <h3>模型与产品生态</h3>
+              <p class="module-intro">ChatGPT、Claude、Gemini、DeepSeek、Qwen、Llama 不是同一类东西：有的是面向用户的产品，有的是模型家族，有的是开放权重模型生态。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">模型生态可以分成三层：底层模型、开发者 API、面向用户的应用产品。</p>
+                <ul>
+                  <li>ChatGPT、Claude、Gemini 更常被用户当作“产品入口”使用，背后会接入不同版本的模型和工具能力。</li>
+                  <li>GPT、Claude、Gemini、DeepSeek、Qwen、Llama、Mistral 更适合理解为模型家族或模型品牌。</li>
+                  <li>同一个品牌下可能有聊天模型、推理模型、代码模型、多模态模型和小模型，不能只看名字判断能力。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>通用问答与写作：适合学习、总结、改写、翻译和资料整理。</li>
+                  <li>推理与分析：适合复杂问题拆解、方案比较和代码理解，但仍需要验证。</li>
+                  <li>多模态：部分模型可以处理图片、音频、视频或文件。</li>
+                  <li>开发者接入：通过 API 把模型嵌入产品、工作流和业务系统。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>个人学习：优先从 ChatGPT、Claude、Gemini 这类成熟产品入手，感受能力边界。</li>
+                  <li>业务原型：选择稳定 API，关注结构化输出、工具调用、成本和响应速度。</li>
+                  <li>私有化或开源研究：关注 Llama、Qwen、Mistral 等开放模型生态。</li>
+                  <li>中文场景：关注中文理解、知识覆盖、合规要求和国内可用性。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>排行榜不等于你的业务效果，真实效果要看自己的任务样本。</li>
+                  <li>产品能力会频繁更新，同名产品背后的模型也可能变化。</li>
+                  <li>开放权重不等于完全免费，部署、推理、运维和安全都要成本。</li>
+                  <li>涉及隐私、合规、企业数据时，要先看数据使用政策和权限边界。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>先按任务分类选模型：写作、检索问答、代码、图像、长文档、自动化执行。</li>
+                  <li>再用一组真实样本比较：准确率、稳定性、速度、成本、可解释性和失败表现。</li>
+                  <li>把产品体验和 API 能力分开评估，不要因为聊天界面好用就默认适合系统集成。</li>
+                  <li>记录每次评估的日期和模型版本，因为 AI 产品变化非常快。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：给团队选择日常 AI 工具。</p>
+                <ul>
+                  <li>学习和写作：比较 ChatGPT、Claude、Gemini 的长文理解、中文表达和文件处理体验。</li>
+                  <li>开发接入：比较 OpenAI、Anthropic、Google、DeepSeek、Qwen 等 API 的结构化输出、工具调用和价格。</li>
+                  <li>本地部署：评估 Llama、Qwen、Mistral 等开放模型能否满足隐私和成本要求。</li>
+                  <li>最后形成“默认工具 + 备选工具 + 禁止使用场景”的团队说明。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方/项目参考</strong>
+              <ul>
+                <li><a href="https://openai.com/chatgpt/enterprise/" target="_blank" rel="noreferrer">OpenAI：ChatGPT Enterprise</a></li>
+                <li><a href="https://platform.openai.com/docs/models" target="_blank" rel="noreferrer">OpenAI：Models</a></li>
+                <li><a href="https://gemini.google/overview/" target="_blank" rel="noreferrer">Google：Gemini overview</a></li>
+                <li><a href="https://docs.anthropic.com/en/docs/about-claude/models/overview" target="_blank" rel="noreferrer">Anthropic：Claude models</a></li>
+                <li><a href="https://api-docs.deepseek.com/api/list-models" target="_blank" rel="noreferrer">DeepSeek：List Models</a></li>
+                <li><a href="https://qwen.readthedocs.io/en/stable/getting_started/concepts.html" target="_blank" rel="noreferrer">Qwen：Key Concepts</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-prompt" data-module-page>
+            <div>
+              <span class="module-kicker">04 / Prompt</span>
+              <h3>Prompt 工程</h3>
+              <p class="module-intro">Prompt 不是咒语，而是把任务目标、角色、约束、步骤、格式和验收标准讲清楚。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">Prompt 是你给 AI 的任务说明，用来定义“要做什么、怎么做、做到什么程度”。</p>
+                <ul>
+                  <li>System Prompt 更像长期规则，决定角色、边界和行为原则。</li>
+                  <li>User Prompt 更像本次任务，说明目标、要求和输出。</li>
+                  <li>Prompt Template 是可复用的任务模板，适合团队协作和稳定输出。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>明确角色：让 AI 使用合适视角，例如产品顾问、学习教练、代码审查员。</li>
+                  <li>明确任务：让 AI 知道是总结、改写、分析、生成还是审查。</li>
+                  <li>明确约束：限定范围、语气、格式、字数、禁止事项和判断标准。</li>
+                  <li>明确示例：用一两个样例让 AI 模仿结构和质量。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>内容场景：写作、润色、标题、脚本、长文摘要。</li>
+                  <li>分析场景：用户反馈归类、方案比较、风险识别、会议纪要。</li>
+                  <li>结构化场景：生成表格、JSON、清单、需求字段、评审模板。</li>
+                  <li>工程场景：描述开发任务、要求代码审查、生成测试用例。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>Prompt 不能让模型知道它没有的数据。</li>
+                  <li>Prompt 不能替代业务判断、法律责任和人工审批。</li>
+                  <li>Prompt 不能完全防住恶意输入和越权工具调用。</li>
+                  <li>任务越复杂，越应该拆成多轮，而不是期待一次提示完成。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <p class="lead">推荐使用一个稳定框架：角色、任务、背景、约束、步骤、格式、示例、验收标准。</p>
+                <ul>
+                  <li>先给结论目标：你希望最终得到什么。</li>
+                  <li>再给背景资料：受众、场景、已有信息、不可改变的约束。</li>
+                  <li>要求 AI 先复述理解或提出缺失问题，避免直接跑偏。</li>
+                  <li>输出后继续追问：哪里不确定、哪些需要验证、还有什么替代方案。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：把模糊需求改成可执行 Prompt。</p>
+                <ul>
+                  <li>低质量写法：“帮我写个 AI 方案。”</li>
+                  <li>高质量写法：“你是产品顾问，请基于以下业务背景，给管理层写一份 1 页方案，包含目标、用户、核心流程、风险、成本和下一步。”</li>
+                  <li>进一步增强：“如果信息不足，请先列出最多 5 个关键问题，不要直接编造。”</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方参考</strong>
+              <ul>
+                <li><a href="https://platform.openai.com/docs/guides/prompting" target="_blank" rel="noreferrer">OpenAI：Prompting</a></li>
+                <li><a href="https://docs.anthropic.com/en/docs/prompt-engineering" target="_blank" rel="noreferrer">Anthropic：Prompt engineering</a></li>
+                <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/prompt-templates-and-variables" target="_blank" rel="noreferrer">Anthropic：Prompt templates and variables</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-context" data-module-page>
+            <div>
+              <span class="module-kicker">05 / Context</span>
+              <h3>上下文管理</h3>
+              <p class="module-intro">上下文是 AI 当前能看到和参考的信息。Prompt 负责下指令，上下文负责提供判断依据。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">上下文包括本轮输入、历史对话、上传资料、检索结果、代码文件、工具返回值和系统规则。</p>
+                <ul>
+                  <li>模型只能基于它看得到的信息做判断。</li>
+                  <li>上下文窗口决定一次任务能放入多少信息。</li>
+                  <li>上下文质量比长度更重要，相关、准确、结构化的信息更有价值。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>让 AI 理解业务背景、历史决策和当前约束。</li>
+                  <li>让长任务可以分阶段延续，而不是每次从零开始。</li>
+                  <li>让 AI 在代码库、文档库和项目资料中保持一致判断。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>长文档总结、会议纪要整理、项目知识沉淀。</li>
+                  <li>AI Coding 中的代码库理解、文件关联和历史修改追踪。</li>
+                  <li>Agent 执行多步任务时保存状态、观察结果和下一步计划。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>上下文太少会让 AI 猜；上下文太多会引入噪音。</li>
+                  <li>历史信息可能过期，旧结论可能污染新判断。</li>
+                  <li>模型不一定能稳定关注最重要的信息，需要人为组织优先级。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>把上下文分层：目标、背景、资料、约束、当前状态、验收标准。</li>
+                  <li>长任务定期让 AI 生成阶段总结，保留决策和未完成 TODO。</li>
+                  <li>代码任务优先提供相关文件和错误日志，而不是整包丢给 AI。</li>
+                  <li>重要资料标注来源、时间和可信度。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：让 AI 接手一个需求讨论。</p>
+                <ul>
+                  <li>先提供目标、用户、已有方案和约束。</li>
+                  <li>再提供历史决策：哪些方案已否决，原因是什么。</li>
+                  <li>最后让 AI 输出当前理解、缺失问题和下一步建议，避免重复讨论。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方参考</strong>
+              <ul>
+                <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/context-windows" target="_blank" rel="noreferrer">Anthropic：Context windows</a></li>
+                <li><a href="https://platform.openai.com/docs/guides/prompting" target="_blank" rel="noreferrer">OpenAI：Prompting</a></li>
+                <li><a href="https://modelcontextprotocol.io/docs/concepts/resources" target="_blank" rel="noreferrer">MCP：Resources</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-rag" data-module-page>
+            <div>
+              <span class="module-kicker">06 / RAG</span>
+              <h3>RAG</h3>
+              <p class="module-intro">RAG 是一种让 AI 先检索资料、再基于资料生成回答的方法。它经常使用知识库，但不等于知识库本身。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">RAG 是“检索增强生成”：先查资料，再让模型基于资料回答。</p>
+                <ul>
+                  <li>它不是训练模型，而是把外部知识库接到模型前面。</li>
+                  <li>核心流程是：文档处理、切分、向量化、检索、重排、生成、引用。</li>
+                  <li>它适合解决“模型不知道企业内部资料”或“需要基于指定文档回答”的问题。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>知识接入：让模型使用企业制度、产品文档、课程资料和项目材料。</li>
+                  <li>降低幻觉：回答前先找到依据，减少凭空生成。</li>
+                  <li>来源追溯：可以展示引用片段，让用户知道答案从哪里来。</li>
+                  <li>快速更新：更新知识库通常比重新训练模型更轻。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>企业内部：制度问答、员工手册、项目文档、流程规范。</li>
+                  <li>客户服务：产品 FAQ、售后政策、故障排查。</li>
+                  <li>教育培训：课程资料问答、知识点解释、题库解析。</li>
+                  <li>专业文档：合同条款、行业报告、技术文档查询。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>资料质量差，答案也会差。过期、重复、冲突资料会直接影响结果。</li>
+                  <li>切分不合理会导致语义断裂，模型拿不到完整上下文。</li>
+                  <li>检索不到关键片段时，模型可能仍然硬答。</li>
+                  <li>权限控制复杂：不同用户不一定能看同一批资料。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>输入问题后，先把问题转换成适合检索的表示。</li>
+                  <li>从资料库中召回相关片段，再做重排，选出最有用的证据。</li>
+                  <li>把证据和用户问题一起交给模型生成答案。</li>
+                  <li>用真实问题集评估检索命中率、回答准确率、引用可靠性和拒答能力。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：内部制度问答助手。</p>
+                <ul>
+                  <li>准备资料：收集制度、流程、FAQ，并标记生效日期和适用部门。</li>
+                  <li>建立知识库：按章节切分，生成 Embedding，写入向量数据库。</li>
+                  <li>回答问题：用户提问后先检索相关条款，再生成简洁答案和引用来源。</li>
+                  <li>兜底机制：检索不到或资料冲突时，提示用户联系对应负责人，而不是编造答案。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方参考</strong>
+              <ul>
+                <li><a href="https://platform.openai.com/docs/guides/retrieval" target="_blank" rel="noreferrer">OpenAI：Retrieval 与 Vector Stores</a></li>
+                <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/overview" target="_blank" rel="noreferrer">Anthropic：Citations / Grounding</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-knowledge" data-module-page>
+            <div>
+              <span class="module-kicker">07 / Knowledge Base</span>
+              <h3>知识库</h3>
+              <p class="module-intro">知识库是被 AI 检索和引用的资料系统。RAG 是使用知识库的一种方法，但知识库还包含资料治理、权限、更新和质量管理。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">知识库是围绕某个业务或主题组织起来的可信资料集合。</p>
+                <ul>
+                  <li>可以是制度文档、产品手册、FAQ、项目资料、课程内容或代码文档。</li>
+                  <li>它不只是文件夹，还包括分类、版本、权限、来源和更新机制。</li>
+                  <li>知识库质量决定 RAG 和智能问答的上限。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>沉淀组织知识，减少重复问答和信息孤岛。</li>
+                  <li>为 AI 提供可信依据，而不是让模型凭记忆回答。</li>
+                  <li>支持不同角色看到不同权限范围内的资料。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>企业制度、客服话术、产品手册、售后政策。</li>
+                  <li>项目文档、研发规范、接口说明、历史决策记录。</li>
+                  <li>培训资料、课程讲义、题库和案例库。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>资料过期、冲突或重复，会让 AI 输出不稳定。</li>
+                  <li>没有权限管理，可能导致敏感信息泄露。</li>
+                  <li>没有维护责任人，知识库会快速变成资料堆。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>先确定知识范围和使用场景，再整理资料。</li>
+                  <li>为每份资料标注来源、负责人、更新时间和适用范围。</li>
+                  <li>按业务结构切分文档，而不是机械按长度切分。</li>
+                  <li>建立更新机制：新增、过期、冲突、删除都要有人负责。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：客服知识库。</p>
+                <ul>
+                  <li>把常见问题、产品说明、售后政策和异常处理流程整理成标准资料。</li>
+                  <li>标注每条资料适用的产品版本、地区和生效时间。</li>
+                  <li>AI 回答时只引用有效资料，遇到冲突或缺失时转人工。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方参考</strong>
+              <ul>
+                <li><a href="https://platform.openai.com/docs/guides/retrieval" target="_blank" rel="noreferrer">OpenAI：Retrieval / Vector stores</a></li>
+                <li><a href="https://modelcontextprotocol.io/docs/concepts/resources" target="_blank" rel="noreferrer">MCP：Resources</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-agent" data-module-page>
+            <div>
+              <span class="module-kicker">08 / Agent</span>
+              <h3>Agent</h3>
+              <p class="module-intro">Agent 是围绕目标持续行动的 AI 系统。它经常使用工具，但 Agent 不等于工具调用。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">Agent 是带目标、工具、反馈和行动循环的 AI 系统。</p>
+                <ul>
+                  <li>普通聊天模型主要回答问题；Agent 会根据目标规划步骤并尝试执行。</li>
+                  <li>Agent 的关键组件通常包括：目标、模型、记忆、计划器、执行器、反馈和权限控制。</li>
+                  <li>它不是一个单独按钮，而是一套让 AI 参与流程的系统设计。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>计划：把开放任务拆成可执行步骤。</li>
+                  <li>决策：判断下一步该收集信息、执行动作，还是请求人工确认。</li>
+                  <li>观察反馈：根据工具返回结果判断下一步。</li>
+                  <li>持续迭代：在目标未完成时继续补充信息、修正计划或请求人工确认。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>信息型任务：调研、资料整理、报告草稿、竞品分析。</li>
+                  <li>流程型任务：工单分派、客服辅助、报表生成、日程整理。</li>
+                  <li>工程型任务：读代码、改文件、运行测试、汇报差异。</li>
+                  <li>跨系统任务：从一个系统读数据，到另一个系统创建记录或发送通知。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>开放目标容易失控，Agent 可能走向不必要或错误的步骤。</li>
+                  <li>工具权限越大，误操作和数据泄露风险越高。</li>
+                  <li>长期任务会遇到上下文遗忘、状态混乱和错误累积。</li>
+                  <li>外部内容可能包含恶意指令，诱导 Agent 越权执行。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>定义任务边界：Agent 负责什么，不负责什么。</li>
+                  <li>定义状态管理：需要记住哪些信息，哪些信息不能长期保存。</li>
+                  <li>设置中间检查点：计划确认、执行确认、结果确认。</li>
+                  <li>记录过程日志：每次调用工具、读取资料、做出判断都要可追踪。</li>
+                  <li>设计终止条件：什么时候算完成，什么时候应该停止并交给人。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：竞品资料整理 Agent。</p>
+                <ul>
+                  <li>目标：围绕指定产品收集竞品公开信息，并生成对比表。</li>
+                  <li>工具：搜索网页、读取网页内容、整理表格，不允许自动发布结论。</li>
+                  <li>过程：先生成调研计划，人确认后再执行搜索和整理。</li>
+                  <li>结果：输出事实表、信息来源、缺失项和初步观察；最终判断由人完成。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方参考</strong>
+              <ul>
+                <li><a href="https://openai.github.io/openai-agents-python/handoffs/" target="_blank" rel="noreferrer">OpenAI Agents SDK：Handoffs</a></li>
+                <li><a href="https://openai.github.io/openai-agents-python/guardrails/" target="_blank" rel="noreferrer">OpenAI Agents SDK：Guardrails</a></li>
+                <li><a href="https://openai.github.io/openai-agents-python/tracing/" target="_blank" rel="noreferrer">OpenAI Agents SDK：Tracing</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-agent-ecosystem" data-module-page>
+            <div>
+              <span class="module-kicker">09 / Agent Ecosystem</span>
+              <h3>Agent 工具生态</h3>
+              <p class="module-intro">Agent 工具不是越“自动”越好。Claude Code、Codex、OpenHands、Browser Use、OpenClaw、Hermes 等名称，真正要比较的是它们能做什么、在哪里运行、拥有什么权限、过程是否可控；其中 OpenClaw、Hermes 这类名称需要先确认具体项目来源。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">Agent 工具生态是一组让 AI 从“聊天回答”进入“执行任务”的产品、框架和运行环境。</p>
+                <ul>
+                  <li>代码型 Agent：偏向读代码、改文件、跑测试、生成 PR，例如 Claude Code、Codex、OpenHands。</li>
+                  <li>浏览器型 Agent：偏向网页浏览、表单操作、页面自动化，例如 Browser Use。</li>
+                  <li>个人自动化 Agent：偏向消息、日历、文件、本地工具和长期任务，例如 OpenClaw、Hermes 这类需要二次核验来源的生态项目。</li>
+                  <li>框架型工具：偏向开发者搭建自己的 Agent，例如 LangGraph、AutoGen、CrewAI、LangChain、LlamaIndex。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>任务执行：把目标拆成步骤，调用文件、浏览器、终端、API 或企业系统。</li>
+                  <li>上下文读取：读取代码库、网页、文档、历史对话和工具返回结果。</li>
+                  <li>长期协作：在多轮任务中保留状态、生成计划、跟进失败和汇报进度。</li>
+                  <li>多 Agent 协作：让不同角色分工，例如实现、审查、测试和总结。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>研发提效：让 Agent 修 Bug、改页面、跑检查、写变更说明。</li>
+                  <li>运营自动化：整理网页资料、处理表格、生成报告、跨系统录入信息。</li>
+                  <li>个人助手：通过消息入口处理日程、提醒、文件和日常任务。</li>
+                  <li>企业流程：把 Agent 接入审批、工单、知识库和 DevOps 流程。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>生态变化快，工具名称、能力、价格和可用入口都会变。</li>
+                  <li>同名项目可能不止一个，例如 Hermes、OpenClaw 相关信息需要回到项目主页或仓库确认。</li>
+                  <li>Agent 能操作真实系统时，权限、日志、沙箱和人工确认比炫酷演示更重要。</li>
+                  <li>开源项目不等于安全可靠，需要检查维护状态、许可证、社区、依赖和插件来源。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>先按使用场景分类：代码、浏览器、办公自动化、个人助理、企业流程。</li>
+                  <li>再看运行位置：云端、本地、IDE、终端、浏览器、企业平台。</li>
+                  <li>最后看控制能力：权限分级、审批节点、运行日志、回滚机制、成本监控。</li>
+                  <li>把 OpenClaw、Hermes 这类快速变化项目标为“生态观察”，不要直接当成稳定标准答案。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：给团队选一个代码 Agent。</p>
+                <ul>
+                  <li>如果团队想在本地终端协作，优先比较 Claude Code、Codex CLI、OpenCode 这类工具的上下文读取和权限控制。</li>
+                  <li>如果团队想处理 GitHub issue 或 PR，比较云端沙箱、分支隔离、测试运行和代码审查能力。</li>
+                  <li>如果需要自托管和可扩展，关注 OpenHands、LangGraph、AutoGen 等框架或平台。</li>
+                  <li>正式使用前，用 5 个真实任务试跑，并记录失败类型和人工接管点。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方/项目参考</strong>
+              <ul>
+                <li><a href="https://code.claude.com/docs/en/overview" target="_blank" rel="noreferrer">Anthropic：Claude Code overview</a></li>
+                <li><a href="https://platform.openai.com/docs/codex" target="_blank" rel="noreferrer">OpenAI：Codex</a></li>
+                <li><a href="https://github.com/OpenHands/OpenHands" target="_blank" rel="noreferrer">OpenHands：GitHub repository</a></li>
+                <li><a href="https://docs.browser-use.com/customize/agent/basics" target="_blank" rel="noreferrer">Browser Use：Agent basics</a></li>
+                <li><a href="https://docs.langchain.com/langgraph" target="_blank" rel="noreferrer">LangGraph：Overview</a></li>
+                <li><a href="https://microsoft.github.io/autogen/stable/index.html" target="_blank" rel="noreferrer">Microsoft AutoGen：Docs</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-tools" data-module-page>
+            <div>
+              <span class="module-kicker">10 / Tool Use</span>
+              <h3>工具调用</h3>
+              <p class="module-intro">工具调用是让 AI 使用外部能力的机制。它可以被 Agent 使用，也可以在普通 AI 应用中单独使用。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">工具调用是把 AI 的自然语言判断转成系统可执行动作。</p>
+                <ul>
+                  <li>常见形式包括 Function Calling、插件、MCP、API 调用和本地工具调用。</li>
+                  <li>模型负责判断“要调用什么工具、传什么参数”。</li>
+                  <li>系统负责真正执行工具、校验参数、返回结果和控制权限。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>查资料：搜索网页、查询数据库、读取知识库。</li>
+                  <li>读写文件：读取文档、修改代码、生成报告。</li>
+                  <li>操作系统：创建日程、发送消息、生成图片、运行脚本。</li>
+                  <li>连接业务：查询订单、创建工单、更新状态、触发审批。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>客服助手查询订单和售后政策。</li>
+                  <li>办公助手创建日程、整理邮件和生成文档。</li>
+                  <li>代码助手读取文件、执行测试和生成变更摘要。</li>
+                  <li>数据助手查询报表、运行分析脚本和生成图表。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>工具参数可能被模型填错，需要严格校验。</li>
+                  <li>工具返回结果可能失败、超时或不完整。</li>
+                  <li>高权限工具会带来误删、误发、越权和泄露风险。</li>
+                  <li>外部内容可能诱导模型调用不该调用的工具。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>工具按风险分级：只读、可写、高风险、不可逆。</li>
+                  <li>高风险动作必须有人确认，例如删除、付款、发送、部署。</li>
+                  <li>每次工具调用记录参数、结果、时间和触发原因。</li>
+                  <li>工具结果返回后，让模型基于结果继续判断，而不是假设成功。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：客服助手查询订单。</p>
+                <ul>
+                  <li>用户问“我的退款到哪了”。</li>
+                  <li>AI 判断需要调用订单查询工具，并提取订单号或请求用户补充。</li>
+                  <li>系统校验权限后查询订单状态，把结果返回给 AI。</li>
+                  <li>AI 基于真实状态回复用户；如果要发起退款操作，则必须人工确认。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方参考</strong>
+              <ul>
+                <li><a href="https://platform.openai.com/docs/guides/function-calling" target="_blank" rel="noreferrer">OpenAI：Function calling / Tool calling</a></li>
+                <li><a href="https://platform.openai.com/docs/guides/structured-outputs" target="_blank" rel="noreferrer">OpenAI：Structured Outputs</a></li>
+                <li><a href="https://modelcontextprotocol.io/docs/learn/server-concepts" target="_blank" rel="noreferrer">MCP：Tools / Resources / Prompts</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-mcp" data-module-page>
+            <div>
+              <span class="module-kicker">11 / MCP</span>
+              <h3>MCP</h3>
+              <p class="module-intro">MCP 是连接 AI 应用和外部系统的开放协议。它让 AI 更标准地访问数据源、工具和可复用提示词。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">MCP 的全称是 Model Context Protocol，可以理解为 AI 应用连接外部能力的标准接口。</p>
+                <ul>
+                  <li>它不是模型，也不是某个具体工具，而是一套连接协议。</li>
+                  <li>它让 AI 客户端可以发现和调用 MCP Server 暴露的能力。</li>
+                  <li>官方文档常把它类比成 AI 应用的 USB-C：一次标准化连接，接入多种外部系统。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>Tools：让 AI 执行动作，例如搜索、查询、创建、更新。</li>
+                  <li>Resources：让 AI 读取上下文资料，例如文件、数据库、日历、文档。</li>
+                  <li>Prompts：提供可复用的提示词模板，引导模型正确使用工具和资源。</li>
+                  <li>Servers：把某个系统的能力封装出来，供 AI 客户端连接。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>让 AI 访问本地文件、代码仓库、数据库、设计工具和企业系统。</li>
+                  <li>为多个 AI 客户端复用同一套工具接入能力。</li>
+                  <li>把内部系统包装成标准能力，减少每个 AI 应用重复开发。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>MCP 解决连接标准问题，不自动解决权限、安全和业务正确性。</li>
+                  <li>Server 暴露能力越强，越需要访问控制、日志和人工确认。</li>
+                  <li>不同客户端对 MCP 能力的支持程度可能不同。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>先判断要暴露的是资料、动作，还是提示模板。</li>
+                  <li>Tools 保持单一职责，输入输出使用清晰 schema。</li>
+                  <li>Resources 标注 URI、MIME 类型、描述和权限。</li>
+                  <li>高风险工具必须加确认和审计，不要默认让模型自由执行。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：给 AI 接入项目知识库和任务系统。</p>
+                <ul>
+                  <li>MCP Server 暴露项目文档作为 Resources。</li>
+                  <li>暴露查询任务、创建任务、更新状态等 Tools。</li>
+                  <li>提供“整理本周项目进展”的 Prompt 模板。</li>
+                  <li>AI 客户端读取资料、查询任务，生成周报草稿；涉及更新任务状态时需要人工确认。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方参考</strong>
+              <ul>
+                <li><a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="noreferrer">MCP：What is MCP?</a></li>
+                <li><a href="https://modelcontextprotocol.io/docs/learn/server-concepts" target="_blank" rel="noreferrer">MCP：Server concepts</a></li>
+                <li><a href="https://modelcontextprotocol.io/docs/learn/architecture" target="_blank" rel="noreferrer">MCP：Architecture overview</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-skill" data-module-page>
+            <div>
+              <span class="module-kicker">12 / Skill</span>
+              <h3>Skill</h3>
+              <p class="module-intro">Skill 是给 AI 或 Agent 使用的可复用能力包，用来沉淀某类任务的流程、规则、边界和输出标准。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">Skill 可以理解为“任务方法说明书”：遇到某类任务时，AI 应该按这套方法执行。</p>
+                <ul>
+                  <li>它通常包含适用场景、操作步骤、注意事项、可用脚本、模板和输出格式。</li>
+                  <li>它不是模型能力本身，而是把经验和流程封装成可复用的上下文。</li>
+                  <li>Skill 可以让不同任务保持一致质量，减少每次重新写 Prompt 的成本。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>流程复用：把高频任务固化成标准步骤。</li>
+                  <li>质量控制：明确输出标准、检查项和常见错误。</li>
+                  <li>工具协同：告诉 Agent 什么时候读文件、运行脚本、调用工具。</li>
+                  <li>知识沉淀：把团队经验变成 AI 可以遵循的操作指南。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>代码审查、技术文档生成、PR 总结、Bug 排查。</li>
+                  <li>市场研究、SEO 审计、产品需求分析、竞品分析。</li>
+                  <li>设计评审、图表生成、飞书/Notion/文档工作流。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>Skill 写得太泛，会退化成普通提示词。</li>
+                  <li>Skill 写得太死，会限制 AI 根据实际上下文调整。</li>
+                  <li>过期 Skill 会把旧流程、旧工具和旧判断带入新任务。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>先定义触发条件：什么任务应该用这个 Skill。</li>
+                  <li>再定义工作流：先读什么、再判断什么、最后产出什么。</li>
+                  <li>补充边界：哪些事情不能自动做，哪些动作必须确认。</li>
+                  <li>沉淀模板和检查清单，让输出更稳定。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：代码审查 Skill。</p>
+                <ul>
+                  <li>触发：用户要求 review 代码或检查 PR。</li>
+                  <li>流程：先看 diff，再找行为风险、边界遗漏、安全问题和测试缺口。</li>
+                  <li>输出：优先列问题，给文件位置、严重级别和建议。</li>
+                  <li>边界：不顺手重构，不修改无关文件，不把格式问题当主要发现。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方/项目参考</strong>
+              <ul>
+                <li><a href="https://modelcontextprotocol.io/docs/develop/build-with-agent-skills" target="_blank" rel="noreferrer">MCP：Build with Agent Skills</a></li>
+                <li><a href="https://modelcontextprotocol.io/docs/learn/server-concepts" target="_blank" rel="noreferrer">MCP：Prompts as reusable templates</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-harness" data-module-page>
+            <div>
+              <span class="module-kicker">13 / Agent Harness</span>
+              <h3>Agent Harness</h3>
+              <p class="module-intro">这里的 Harness 是一种工程归纳，不是统一官方标准名。它可以理解为 Agent 的运行支架：不负责“变聪明”，而是负责让 Agent 按规则运行、留下过程、失败可恢复、结果可评估。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">Agent Harness 是本文用来描述 Agent 运行支撑层的概念，包括任务协议、工具适配、状态管理、权限控制、评估和日志。</p>
+                <ul>
+                  <li>它是一种工程方法和归纳口径，不特指某个模型，也不是所有官方文档都会使用的统一术语。</li>
+                  <li>它也不同于 Harness 这家公司或平台；后者是具体 DevOps/AI 平台，前者是通用概念。</li>
+                  <li>一个好的 harness 会把“模型想做什么”和“系统允许做什么”分开处理。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>约束输入输出：让任务有固定输入、输出、状态和验收标准。</li>
+                  <li>管理工具：封装工具调用、参数校验、权限审批和结果回传。</li>
+                  <li>记录过程：保存计划、工具调用、错误、成本、耗时和人工接管点。</li>
+                  <li>恢复失败：失败后可以重试、降级、回滚或交给人处理。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>AI Coding：让 Agent 在隔离环境中改代码、跑测试、产出变更摘要。</li>
+                  <li>企业自动化：让 Agent 按流程调用系统，关键动作必须审批。</li>
+                  <li>RAG 问答：记录检索内容、引用来源和回答质量。</li>
+                  <li>多 Agent 协作：让不同 Agent 的交接、状态和输出保持一致。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>Harness 不能让错误模型变成可靠专家，只能提高过程可控性。</li>
+                  <li>过度复杂的 harness 会让系统难维护，简单任务不需要重型框架。</li>
+                  <li>如果验收标准本身模糊，再完整的日志也难判断结果是否正确。</li>
+                  <li>监控和日志可能包含敏感数据，需要访问控制和保留策略。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>写清任务协议：目标、输入、可用工具、禁止动作、输出格式、完成标准。</li>
+                  <li>工具按风险分层：只读、可写、高风险、不可逆，并设置不同确认方式。</li>
+                  <li>建立运行记录：每一步为什么做、调用了什么、返回了什么、花了多少成本。</li>
+                  <li>设计失败路径：重试几次、何时降级、何时停止、何时转人工。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：代码修复 Agent 的 harness。</p>
+                <ul>
+                  <li>输入：GitHub issue、相关日志、仓库路径和验收标准。</li>
+                  <li>权限：允许读文件、改工作区、运行测试；禁止推送远端和修改生产配置。</li>
+                  <li>过程：先输出计划，人确认后修改；每次测试失败都记录原因。</li>
+                  <li>输出：改动文件、验证命令、失败残留、风险点和需要人工 Review 的位置。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方/项目参考</strong>
+              <ul>
+                <li><a href="https://platform.openai.com/docs/guides/agent-evals" target="_blank" rel="noreferrer">OpenAI：Agent evals</a></li>
+                <li><a href="https://openai.github.io/openai-agents-python/tracing/" target="_blank" rel="noreferrer">OpenAI Agents SDK：Tracing</a></li>
+                <li><a href="https://developer.harness.io/docs/platform/harness-ai/harness-agents/" target="_blank" rel="noreferrer">Harness Developer Hub：Harness Agents</a></li>
+                <li><a href="https://arxiv.org/abs/2603.25723" target="_blank" rel="noreferrer">论文：Natural-Language Agent Harnesses</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-coding" data-module-page>
+            <div>
+              <span class="module-kicker">14 / AI Coding</span>
+              <h3>AI Coding 工作流</h3>
+              <p class="module-intro">AI Coding 把人的工作重心从“逐行写代码”推向“描述任务、提供上下文、审查结果和验证行为”。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">AI Coding 是让 AI 参与软件开发的工作方式，而不只是“自动写代码”。</p>
+                <ul>
+                  <li>它覆盖需求理解、代码阅读、方案设计、文件修改、调试、测试和代码审查。</li>
+                  <li>人的角色会从逐行实现，更多转向描述目标、提供上下文、控制风险和验收结果。</li>
+                  <li>越是已有代码库，越需要让 AI 先理解项目结构和局部上下文。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>理解：解释函数、组件、调用链和业务流程。</li>
+                  <li>生成：创建脚本、页面、接口、测试和文档。</li>
+                  <li>修改：修 Bug、补交互、调整样式、接入数据。</li>
+                  <li>验证：运行检查、解释报错、生成测试用例、做初步 Review。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>低风险高收益：原型页面、内部工具、数据处理脚本、文档生成。</li>
+                  <li>明确边界任务：修一个 Bug、改一个组件、补一个测试、解释一段代码。</li>
+                  <li>协作学习：帮助非技术同学理解开发流程和技术约束。</li>
+                  <li>不适合一上来全自动处理复杂核心系统、支付、安全和权限逻辑。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>业务误解：代码能运行，但不符合真实业务规则。</li>
+                  <li>上下文不足：只看局部文件，漏掉其他调用方。</li>
+                  <li>测试缺失：AI 可能没有覆盖关键边界条件。</li>
+                  <li>风格不一致：引入不符合项目习惯的写法或过度抽象。</li>
+                  <li>高风险改动：数据库、权限、安全、支付和部署需要更严格审查。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>任务描述：说明用户场景、期望行为、影响范围和验收标准。</li>
+                  <li>上下文准备：让 AI 先读相关文件、现有模式和错误日志。</li>
+                  <li>小步修改：一次只改清晰边界内的问题，避免大范围顺手重构。</li>
+                  <li>结果验收：要求 AI 汇报改了什么、为什么改、怎么验证、还有什么风险。</li>
+                  <li>人类审查：关键代码必须 Review，不能只看 AI 的自我总结。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：让 AI 辅助修改一个筛选功能。</p>
+                <ul>
+                  <li>描述需求：用户希望按标签筛选内容，筛选后列表和空状态要同步变化。</li>
+                  <li>读取上下文：让 AI 找到列表组件、数据结构和现有筛选逻辑。</li>
+                  <li>执行改动：只修改筛选相关文件，不做无关样式和架构调整。</li>
+                  <li>验证结果：运行检查，手动点击标签，确认空状态、移动端布局和数据数量都正确。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方参考</strong>
+              <ul>
+                <li><a href="https://platform.openai.com/docs/guides/code-generation" target="_blank" rel="noreferrer">OpenAI：Code generation</a></li>
+                <li><a href="https://platform.openai.com/docs/models" target="_blank" rel="noreferrer">OpenAI：Coding and agentic models</a></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="module page" id="module-agentic" data-module-page>
+            <div>
+              <span class="module-kicker">15 / Agentic Engineering</span>
+              <h3>Agentic Engineering</h3>
+              <p class="module-intro">当 AI 能调用工具、修改文件、执行流程时，工程重点会从“会不会生成”转向“是否可控、可验证、可追踪”。</p>
+            </div>
+            <div class="module-detail-grid">
+              <div class="module-detail">
+                <strong>是什么</strong>
+                <p class="lead">Agentic Engineering 是面向 AI Agent 的工程方法：让 AI 能参与任务，同时保持可控、可测、可追踪。</p>
+                <ul>
+                  <li>它不是单纯写 Prompt，也不是让 AI 完全自动接管工作。</li>
+                  <li>它关注任务如何拆解、工具如何接入、权限如何限制、结果如何评估、失败如何恢复。</li>
+                  <li>它把 AI 从“单次回答”放进真实工程流程里。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>能力</strong>
+                <ul>
+                  <li>任务编排：把复杂目标拆成可执行、可验证的阶段。</li>
+                  <li>工具接入：让 Agent 安全使用文件、浏览器、数据库、代码仓库和业务 API。</li>
+                  <li>过程控制：记录计划、动作、工具调用、输出和错误。</li>
+                  <li>质量闭环：用测试、评估、人工 Review 和反馈数据持续改进。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>场景</strong>
+                <ul>
+                  <li>研发：需求拆解、代码修改、测试运行、PR 总结、CI 问题排查。</li>
+                  <li>知识库：自动发现过期文档、归类新资料、补充术语表。</li>
+                  <li>运营：跨系统拉取数据、生成日报、整理异常并提醒负责人。</li>
+                  <li>产品：把用户反馈聚类，生成问题清单和需求机会。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>限制</strong>
+                <ul>
+                  <li>开放任务难评估：如果目标不清楚，就很难判断 Agent 做得好不好。</li>
+                  <li>执行链路长：中间一步错，后面可能持续放大错误。</li>
+                  <li>权限风险高：读写文件、调用接口、部署代码都必须分级控制。</li>
+                  <li>可观测性要求高：看不到过程，就很难定位问题和追责。</li>
+                </ul>
+              </div>
+              <div class="module-detail">
+                <strong>方法</strong>
+                <ul>
+                  <li>定义任务协议：输入是什么、输出是什么、完成标准是什么。</li>
+                  <li>设计权限模型：哪些工具只读，哪些工具可写，哪些动作必须确认。</li>
+                  <li>建立评估体系：准确率、完成率、人工接管率、失败原因、成本和耗时。</li>
+                  <li>保留回滚机制：文件改动、数据变更和业务动作都要能追踪和恢复。</li>
+                  <li>引入人工节点：计划确认、关键动作确认、最终结果验收。</li>
+                </ul>
+              </div>
+              <div class="module-detail case">
+                <strong>案例</strong>
+                <p class="lead">案例：可控的 AI 工程工作流。</p>
+                <ul>
+                  <li>阶段 1：Agent 阅读需求和相关代码，输出实施计划、影响范围和风险点。</li>
+                  <li>阶段 2：人确认计划后，Agent 执行小步代码修改，并保留变更摘要。</li>
+                  <li>阶段 3：Agent 运行测试和检查，失败时先分析原因，不直接扩大修改范围。</li>
+                  <li>阶段 4：最终输出改动文件、验证结果、未覆盖风险和需要人工确认的点。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="source-panel">
+              <strong>官方参考</strong>
+              <ul>
+                <li><a href="https://platform.openai.com/docs/guides/agent-evals" target="_blank" rel="noreferrer">OpenAI：Agent evals</a></li>
+                <li><a href="https://openai.github.io/openai-agents-python/tracing/" target="_blank" rel="noreferrer">OpenAI Agents SDK：Tracing</a></li>
+                <li><a href="https://modelcontextprotocol.io/docs/learn/architecture" target="_blank" rel="noreferrer">MCP：Architecture overview</a></li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section page" id="terms" data-page="terms">
+        <div class="section-heading">
+          <h2>70 个核心词条</h2>
+          <p>左侧用于快速查找，点击词条后在右侧展开详细解读。先看一句话，再看关键知识点、容易混淆的概念和落地检查。</p>
+        </div>
+        <div class="term-map" aria-label="核心词条关系图">
+          <div class="term-map-header">
+            <h3>先看关系，再查词条</h3>
+            <p>核心词条可以按“能力底座 → 使用方法 → 外部知识 → 行动执行 → 工程治理”来理解。模型产品和开发框架不是主线本身，而是围绕主线提供不同入口和工具。</p>
+          </div>
+          <div class="term-map-canvas">
+            <div class="map-column">
+              <strong>01 基础认知</strong>
+              <span class="map-node primary">AI</span>
+              <span class="map-node">生成式 AI</span>
+              <span class="map-node">大语言模型</span>
+              <span class="map-node">幻觉</span>
+            </div>
+            <div class="map-column">
+              <strong>02 模型与输入</strong>
+              <span class="map-node primary">Token</span>
+              <span class="map-node">上下文窗口</span>
+              <span class="map-node">Prompt</span>
+              <span class="map-node">结构化输出</span>
+            </div>
+            <div class="map-column">
+              <strong>03 外部知识</strong>
+              <span class="map-node primary">RAG</span>
+              <span class="map-node">Embedding</span>
+              <span class="map-node">向量数据库</span>
+              <span class="map-node">Grounding / Citation</span>
+            </div>
+            <div class="map-column">
+              <strong>04 行动执行</strong>
+              <span class="map-node primary">Agent</span>
+              <span class="map-node">Tool Use</span>
+              <span class="map-node">MCP</span>
+              <span class="map-node">Skill</span>
+            </div>
+            <div class="map-column">
+              <strong>05 工程落地</strong>
+              <span class="map-node primary">AI Coding</span>
+              <span class="map-node">Evaluation</span>
+              <span class="map-node">Observability</span>
+              <span class="map-node">Agent Harness</span>
+            </div>
+          </div>
+          <div class="map-side">
+            <div class="map-side-group">
+              <strong>产品入口：用来体验和接入模型能力</strong>
+              <div class="map-side-list">
+                <span class="map-node accent">ChatGPT</span>
+                <span class="map-node accent">Claude</span>
+                <span class="map-node accent">Gemini</span>
+                <span class="map-node accent">DeepSeek</span>
+                <span class="map-node accent">Qwen</span>
+                <span class="map-node accent">Llama</span>
+              </div>
+            </div>
+            <div class="map-side-group">
+              <strong>Agent / 框架生态：用来搭建和运行任务系统</strong>
+              <div class="map-side-list">
+                <span class="map-node accent">Claude Code</span>
+                <span class="map-node accent">Codex</span>
+                <span class="map-node accent">OpenHands</span>
+                <span class="map-node accent">LangGraph</span>
+                <span class="map-node accent">AutoGen</span>
+                <span class="map-node accent">LlamaIndex</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tool-row">
+          <input class="search" id="searchInput" type="search" placeholder="搜索词条，例如 RAG、Agent、权限、测试" aria-label="搜索词条">
+          <div class="tag-bar" id="tagBar" aria-label="标签筛选"></div>
+        </div>
+        <div class="terms-workspace">
+          <div class="terms-list">
+            <div class="terms-grid" id="termsGrid"></div>
+            <p class="empty" id="emptyState">没有找到匹配词条。可以换一个关键词，或者清空标签筛选。</p>
+          </div>
+          <aside class="term-detail-panel" id="termDetail" aria-live="polite"></aside>
+        </div>
+      </section>
+
+      <footer>
+        AI 快速学习手册 v1.3。已新增模型产品生态、Agent 工具生态与 Agent Harness。
+      </footer>
+    </main>
+  </div>
+
+  <script src="./ai-manual-data.js"></script>
+  <script>
+    const terms = window.AI_MANUAL_TERMS || [];
+
+    const tags = ["全部", ...Array.from(new Set(terms.map((term) => term.tag)))];
+    const tagBar = document.querySelector("#tagBar");
+    const grid = document.querySelector("#termsGrid");
+    const searchInput = document.querySelector("#searchInput");
+    const emptyState = document.querySelector("#emptyState");
+    const termDetail = document.querySelector("#termDetail");
+    const pages = Array.from(document.querySelectorAll("main > .page"));
+    const moduleContainer = document.querySelector("#modules");
+    const modulePages = Array.from(document.querySelectorAll("[data-module-page]"));
+    const navLinks = Array.from(document.querySelectorAll(".nav-tree a"));
+    const moduleIds = new Set(modulePages.map((modulePage) => modulePage.id));
+    let activeTag = "全部";
+    let activeTermId = terms[0]?.id || null;
+
+    function setActiveNavigation(hash) {
+      navLinks.forEach((link) => {
+        link.classList.toggle("is-active", link.getAttribute("href") === hash);
+      });
+    }
+
+    function showPage(rawHash = window.location.hash) {
+      const hash = rawHash && rawHash !== "#" ? rawHash : "#module-foundation";
+      const targetId = hash.slice(1);
+      const isModuleTarget = moduleIds.has(targetId);
+
+      pages.forEach((page) => {
+        const shouldShow = isModuleTarget ? page === moduleContainer : page.id === targetId;
+        page.classList.toggle("is-active", shouldShow);
+      });
+
+      modulePages.forEach((modulePage) => {
+        const shouldShow = isModuleTarget ? modulePage.id === targetId : modulePage.id === "module-foundation";
+        modulePage.classList.toggle("is-active", shouldShow);
+      });
+
+      setActiveNavigation(isModuleTarget ? hash : `#${targetId}`);
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+
+    function renderTags() {
+      tagBar.innerHTML = tags.map((tag) => `
+        <button class="tag" type="button" data-tag="${tag}" aria-pressed="${tag === activeTag}">
+          ${tag}
+        </button>
+      `).join("");
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    const tagKnowledge = {
+      "基础": {
+        points: ["先把概念边界讲清楚，再讨论工具和落地。", "基础词条常用于建立共同语言，避免团队把 AI、大模型、Agent 混成一件事。", "判断一个基础概念是否理解到位，可以看你能不能用自己的业务场景举例。"],
+        confusion: ["容易把 AI 当成某个具体产品，其实它是一类能力集合。", "容易把演示效果当作真实可落地能力，忽略数据、权限和流程。"],
+        checklist: ["能否用一句话解释给非技术同学听？", "能否说清它解决什么问题、不解决什么问题？", "能否指出一个真实使用场景和一个风险边界？"]
+      },
+      "模型": {
+        points: ["模型相关词条主要解释 AI 的能力底座，例如输入如何被处理、模型能看见多少内容、为什么会生成错误。", "理解模型不是为了背参数，而是为了知道什么时候该补上下文、什么时候该接检索、什么时候该换模型。", "模型能力要结合任务样本评估，不能只看排行榜或发布会演示。"],
+        confusion: ["容易把模型当数据库，以为问什么都会返回事实。", "容易把模型越大等同于任何任务都更好，忽略成本、速度和产品设计。"],
+        checklist: ["这个任务需要最新事实吗？", "输入内容是否超过上下文窗口？", "输出是否需要引用、验证或结构化约束？"]
+      },
+      "提示词": {
+        points: ["提示词的本质是任务说明，不是神秘口令。", "好的提示词会同时说明目标、背景、约束、步骤、格式和验收标准。", "复杂任务不要期待一句提示词解决，应该拆成多轮协作。"],
+        confusion: ["容易把 Prompt 当成万能技巧，忽略资料和业务判断。", "容易只写角色，不写任务标准，导致输出看起来像但不能用。"],
+        checklist: ["目标是否明确？", "背景资料是否足够？", "输出格式和判断标准是否写清楚？"]
+      },
+      "知识库": {
+        points: ["知识库相关词条解释 AI 如何使用外部资料，而不是只依赖模型记忆。", "资料质量、切分方式、检索排序和引用展示都会影响最终回答。", "RAG 能降低幻觉风险，但不能替代资料治理和人工审核。"],
+        confusion: ["容易把 RAG 等同于知识库，其实 RAG 是一种使用知识库的生成流程。", "容易把向量数据库当成全部知识库，忽略权限、更新和来源。"],
+        checklist: ["资料是否准确且最新？", "是否能追溯回答依据？", "冲突资料和缺失资料如何处理？"]
+      },
+      "Agent": {
+        points: ["Agent 相关词条关注 AI 如何围绕目标行动，而不是只回答问题。", "Agent 的核心不是聊天，而是计划、调用工具、观察结果、继续推进。", "越能执行真实动作，越需要权限、日志、确认和停止条件。"],
+        confusion: ["容易把 Agent 等同于工具调用；工具调用只是 Agent 可能使用的一种能力。", "容易把多 Agent 当高级方案，其实很多任务用简单 Workflow 更稳。"],
+        checklist: ["目标是否清楚？", "工具权限是否分级？", "失败、停止、转人工的条件是否明确？"]
+      },
+      "工程": {
+        points: ["工程词条关注 AI 系统如何稳定运行、持续评估和可追责。", "真正落地时，日志、评估、回滚、权限和人工确认往往比 Prompt 更重要。", "工程能力决定 AI 从演示走向可维护产品。"],
+        confusion: ["容易只优化模型回答，不建设评估和监控。", "容易追求全自动，忽略责任边界和失败兜底。"],
+        checklist: ["有没有验收标准？", "过程是否可追踪？", "失败后能否回滚或转人工？"]
+      },
+      "安全": {
+        points: ["安全词条关注输入、输出、工具调用和数据访问的边界。", "AI 安全不能只靠提示词，要靠系统权限、沙箱、审计和人工确认共同完成。", "越接近真实业务动作，越要提前定义禁止事项。"],
+        confusion: ["容易以为 System Prompt 能完全防住越权。", "容易忽略外部网页、文档和用户输入里的恶意指令。"],
+        checklist: ["是否有最小权限？", "高风险动作是否需要确认？", "日志中是否包含敏感信息？"]
+      },
+      "Coding": {
+        points: ["Coding 词条解释 AI 如何参与软件开发，而不是简单替代程序员。", "关键在于给足代码库上下文、明确改动范围，并验证行为是否正确。", "AI Coding 的质量很大程度取决于任务描述和工程验收。"],
+        confusion: ["容易把能跑起来当成正确，忽略业务边界。", "容易让 AI 顺手重构，扩大风险。"],
+        checklist: ["改动范围是否明确？", "是否读过相关上下文？", "是否运行了检查或人工 Review？"]
+      },
+      "模型产品": {
+        points: ["模型产品词条帮助区分模型家族、API 和面向用户的产品。", "同一个品牌下可能有多个模型版本、工具能力和套餐限制。", "选型时要用自己的真实任务样本，而不是只追最新名字。"],
+        confusion: ["容易把 ChatGPT、Claude 这类产品和底层模型画等号。", "容易忽略地区、价格、数据政策和企业合规要求。"],
+        checklist: ["这是产品、模型还是 API？", "当前版本和能力入口是什么？", "是否适合自己的数据和使用场景？"]
+      },
+      "Agent工具": {
+        points: ["Agent 工具词条关注具体工具如何帮助 AI 执行任务。", "比较工具时要看运行位置、权限范围、可观测性、生态集成和失败处理。", "工具越强，越要检查它能读什么、能写什么、能否撤回。"],
+        confusion: ["容易把工具演示当成稳定生产能力。", "容易忽略同名项目和快速变化带来的信息不确定性。"],
+        checklist: ["工具在哪里运行？", "它能操作哪些系统？", "是否有日志、沙箱和人工确认？"]
+      },
+      "框架": {
+        points: ["框架词条面向开发者，帮助搭建自己的 AI 应用或 Agent 系统。", "框架通常解决编排、状态、工具、检索和多 Agent 协作问题。", "框架不是产品，使用它意味着你要承担更多工程设计。"],
+        confusion: ["容易为了用框架而用框架，让简单任务变复杂。", "容易把框架能力当作业务正确性的保证。"],
+        checklist: ["这个任务是否真的需要框架？", "团队是否能维护它？", "是否有评估、日志和失败处理？"]
+      },
+      "方法": {
+        points: ["方法词条关注可复用的工作方式，而不是某个单一工具。", "好的方法能帮助你判断什么时候该自动化、什么时候该人工确认。", "方法最终要落到流程、检查清单和验收标准上。"],
+        confusion: ["容易把方法当术语收藏，实际任务中没有用起来。", "容易把某家公司产品名和通用方法混在一起。"],
+        checklist: ["这个方法解决什么风险？", "它适合当前任务复杂度吗？", "能否沉淀成团队流程？"]
+      }
+    };
+
+    const relationMap = {
+      "AI": ["生成式 AI", "大语言模型", "Agent"],
+      "生成式 AI": ["AI", "大语言模型", "幻觉"],
+      "大语言模型": ["Token", "上下文窗口", "幻觉", "Fine-tuning"],
+      "Token": ["上下文窗口", "Prompt Caching", "大语言模型"],
+      "上下文窗口": ["Context Engineering", "Memory", "Codebase Context"],
+      "Prompt": ["System Prompt", "结构化输出", "Prompt Injection"],
+      "RAG": ["Embedding", "向量数据库", "Chunk", "Grounding", "Citation"],
+      "Agent": ["Tool Use", "Planning", "Memory", "Agent Harness"],
+      "Tool Use": ["Function Calling", "MCP", "Tool Permission"],
+      "MCP": ["Tool Use", "Skill", "Agent"],
+      "Skill": ["MCP", "Prompt", "Workflow"],
+      "AI Coding": ["Codebase Context", "Code Review", "Test Generation", "Codex"],
+      "Agentic Engineering": ["Evaluation", "Observability", "Rollback", "Agent Harness"],
+      "ChatGPT": ["大语言模型", "Prompt", "结构化输出"],
+      "Claude": ["Claude Code", "大语言模型", "上下文窗口"],
+      "Gemini": ["多模态", "大语言模型", "模型与产品生态"],
+      "Claude Code": ["AI Coding", "Codebase Context", "Code Review"],
+      "Codex": ["AI Coding", "Agent", "Sandbox"],
+      "OpenHands": ["AI Coding", "Agent", "Sandbox"],
+      "Browser Use": ["Agent", "Tool Use", "Prompt Injection"],
+      "LangGraph": ["Agent", "Orchestration", "Human-in-the-loop"],
+      "AutoGen": ["Multi-agent", "Agent", "Orchestration"],
+      "CrewAI": ["Multi-agent", "Workflow", "Agent"],
+      "LangChain": ["Tool Use", "Agent", "RAG"],
+      "LlamaIndex": ["RAG", "Embedding", "知识库"],
+      "Agent Harness": ["Agent", "Evaluation", "Observability", "Rollback"]
+    };
+
+    function getTermByTitle(title) {
+      return terms.find((term) => term.title === title);
+    }
+
+    function getRelatedTerms(term) {
+      const explicit = (relationMap[term.title] || [])
+        .map(getTermByTitle)
+        .filter(Boolean);
+      const sameTag = terms
+        .filter((candidate) => candidate.tag === term.tag && candidate.id !== term.id)
+        .slice(0, 5);
+      return [...explicit, ...sameTag]
+        .filter((candidate, index, list) => list.findIndex((item) => item.id === candidate.id) === index)
+        .slice(0, 6);
+    }
+
+    function renderTermDetail(term) {
+      if (!term) {
+        termDetail.innerHTML = `
+          <div class="term-detail-header">
+            <span class="pill">未选择</span>
+            <h3>选择一个词条</h3>
+            <p class="term-detail-summary">左侧没有匹配项时，可以清空搜索或切换标签。</p>
+          </div>
+        `;
+        return;
+      }
+
+      const knowledge = tagKnowledge[term.tag] || tagKnowledge["基础"];
+      const relatedTerms = getRelatedTerms(term);
+
+      termDetail.innerHTML = `
+        <div class="term-detail-header">
+          <span class="pill">${escapeHtml(term.tag)}</span>
+          <h3>${escapeHtml(term.title)}</h3>
+          <p class="term-detail-summary">${escapeHtml(term.summary)}</p>
+        </div>
+        <section class="term-detail-section">
+          <h4>怎么理解</h4>
+          <p>${escapeHtml(term.title)} 可以先放在「${escapeHtml(term.tag)}」这一类里理解。它的价值不是记住名字，而是知道它在 AI 系统里负责哪一段：理解、生成、检索、调用工具、执行流程，还是控制风险。</p>
+        </section>
+        <section class="term-detail-section">
+          <h4>关键知识点</h4>
+          <ul>
+            ${knowledge.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}
+            <li>典型使用场景：${escapeHtml(term.use)}</li>
+          </ul>
+        </section>
+        <section class="term-detail-section">
+          <h4>容易混淆</h4>
+          <ul>
+            ${knowledge.confusion.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}
+            <li>当前词条的重点风险：${escapeHtml(term.risk)}</li>
+          </ul>
+        </section>
+        <section class="term-detail-section">
+          <h4>落地检查</h4>
+          <ul>
+            ${knowledge.checklist.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}
+          </ul>
+        </section>
+        <section class="term-detail-section">
+          <h4>相关词条</h4>
+          <div class="related-terms">
+            ${relatedTerms.map((related) => `
+              <button class="related-term" type="button" data-term-id="${related.id}">
+                ${escapeHtml(related.title)}
+              </button>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderTerms() {
+      const query = searchInput.value.trim().toLowerCase();
+      const visibleTerms = terms.filter((term) => {
+        const text = `${term.title} ${term.tag} ${term.summary} ${term.use} ${term.risk}`.toLowerCase();
+        const matchesTag = activeTag === "全部" || term.tag === activeTag;
+        const matchesSearch = !query || text.includes(query);
+        return matchesTag && matchesSearch;
+      });
+      const visibleIds = new Set(visibleTerms.map((term) => term.id));
+
+      if (!visibleIds.has(activeTermId)) {
+        activeTermId = visibleTerms[0]?.id || null;
+      }
+
+      grid.innerHTML = terms.map((term) => {
+        const text = `${term.title} ${term.tag} ${term.summary} ${term.use} ${term.risk}`.toLowerCase();
+        const matchesTag = activeTag === "全部" || term.tag === activeTag;
+        const matchesSearch = !query || text.includes(query);
+        const isVisible = matchesTag && matchesSearch;
+        const isActive = term.id === activeTermId;
+
+        return `
+          <article class="term-card ${isVisible ? "" : "is-hidden"} ${isActive ? "is-active" : ""}" role="button" tabindex="${isVisible ? 0 : -1}" aria-pressed="${isActive}" data-term-id="${term.id}">
+            <div class="term-top">
+              <h3>${escapeHtml(term.title)}</h3>
+              <span class="term-index">${String(term.id).padStart(2, "0")}</span>
+            </div>
+            <span class="pill">${escapeHtml(term.tag)}</span>
+            <p><strong>一句话：</strong>${escapeHtml(term.summary)}</p>
+          </article>
+        `;
+      }).join("");
+
+      emptyState.classList.toggle("is-visible", visibleTerms.length === 0);
+      renderTermDetail(terms.find((term) => term.id === activeTermId));
+    }
+
+    function selectTerm(termId, options = {}) {
+      activeTermId = Number(termId);
+      renderTerms();
+      if (options.scrollDetail && window.matchMedia("(max-width: 1080px)").matches) {
+        termDetail.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    tagBar.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-tag]");
+      if (!button) return;
+      activeTag = button.dataset.tag;
+      renderTags();
+      renderTerms();
+    });
+
+    grid.addEventListener("click", (event) => {
+      const card = event.target.closest("[data-term-id]");
+      if (!card) return;
+      selectTerm(card.dataset.termId, { scrollDetail: true });
+    });
+
+    grid.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const card = event.target.closest("[data-term-id]");
+      if (!card) return;
+      event.preventDefault();
+      selectTerm(card.dataset.termId, { scrollDetail: true });
+    });
+
+    termDetail.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-term-id]");
+      if (!button) return;
+      activeTag = "全部";
+      searchInput.value = "";
+      renderTags();
+      selectTerm(button.dataset.termId, { scrollDetail: false });
+    });
+
+    searchInput.addEventListener("input", renderTerms);
+    window.addEventListener("hashchange", () => showPage(window.location.hash));
+
+    renderTags();
+    renderTerms();
+    showPage(window.location.hash);
+  </script>
+</body>
+</html>
