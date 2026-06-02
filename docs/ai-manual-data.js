@@ -68,5 +68,15 @@ window.AI_MANUAL_TERMS = [
   { id: 67, title: "CrewAI", tag: "框架", summary: "面向多 Agent 编排的开源框架，强调用角色、任务和流程组织 Agent 协作。", use: "内容生产流程、业务自动化、多角色 Agent 团队、快速原型。", risk: "角色分工过多会增加复杂度，简单流程优先用 Workflow 更稳。" },
   { id: 68, title: "LangChain", tag: "框架", summary: "连接模型、提示词、工具、检索和 Agent 的开发框架生态。", use: "AI 应用开发、工具接入、检索问答、Agent 原型、模型编排。", risk: "抽象层较多，项目落地时要避免为了框架而框架。" },
   { id: 69, title: "LlamaIndex", tag: "框架", summary: "偏向把外部数据接入 LLM 的框架，常用于 RAG、文档索引和数据驱动 Agent。", use: "知识库问答、文档解析、RAG 管道、数据工具接入。", risk: "它能降低接入成本，但资料质量、切分策略和评估仍要自己把控。" },
-  { id: 70, title: "Agent Harness", tag: "方法", summary: "本文用来归纳 Agent 运行支撑层的工程概念，包括任务协议、状态管理、工具适配、权限、日志、评估和恢复。", use: "AI Coding、企业自动化、多 Agent 协作、可审计 Agent 流程。", risk: "Agent Harness 不是统一官方标准名，也不是万能框架；目标和验收标准不清楚时，支架再完整也难保证结果正确。" }
+  { id: 70, title: "Agent Harness", tag: "方法", summary: "本文用来归纳 Agent 运行支撑层的工程概念，包括任务协议、状态管理、工具适配、权限、日志、评估和恢复。", use: "AI Coding、企业自动化、多 Agent 协作、可审计 Agent 流程。", risk: "Agent Harness 不是统一官方标准名，也不是万能框架；目标和验收标准不清楚时，支架再完整也难保证结果正确。" },
+  { id: 71, title: "Agentic Loop", tag: "Agent", summary: "Agent 围绕目标反复观察、思考、行动、读取反馈并继续推进的执行循环。", use: "代码修复、资料调研、自动化办公、长任务执行、工具调用型 Agent。", risk: "循环越长越容易积累错误，必须设置停止条件、日志和人工确认点。" },
+  { id: 72, title: "CLAUDE.md", tag: "Coding", summary: "Claude Code 中用于沉淀项目记忆和团队规则的说明文件，可让 AI 在每次任务开始时理解项目背景。", use: "项目技术栈、目录结构、命名规范、常用命令、提交规范、团队约束。", risk: "不要把所有文档都塞进去；它会占用上下文，应该保持精炼、具体、可执行。" },
+  { id: 73, title: "SubAgents", tag: "Agent", summary: "子智能体，用独立上下文承接特定子任务，把噪声、权限和中间过程隔离在局部范围内。", use: "日志分析、代码审查、安全扫描、并行调研、复杂任务拆解。", risk: "子智能体之间不能天然共享全部上下文，输出必须结构化，否则会造成信息丢失和协作混乱。" },
+  { id: 74, title: "Hooks", tag: "安全", summary: "事件钩子，在 Agent 执行关键动作前后自动触发脚本或检查，用系统机制拦截风险。", use: "危险命令拦截、敏感文件保护、自动格式化、审计日志、质量门控。", risk: "Hooks 是强约束机制，配置错误可能阻塞正常工作；需要分级、调试和审计。" },
+  { id: 75, title: "PreToolUse", tag: "安全", summary: "工具执行前触发的 Hook，可在工具真正运行之前允许、拒绝或修改输入。", use: "拦截删除命令、限制网络访问、保护密钥文件、自动追加安全参数。", risk: "它位于高风险执行路径上，规则过宽会放过危险动作，规则过严会影响效率。" },
+  { id: 76, title: "PostToolUse", tag: "工程", summary: "工具成功执行后触发的 Hook，用于记录、补充上下文、处理输出或形成反馈闭环。", use: "记录工具调用、运行 lint、格式化文件、把检查结果反馈给 Agent。", risk: "它通常不能撤销已经发生的动作，高风险动作仍应在执行前拦截。" },
+  { id: 77, title: "Headless Mode", tag: "Coding", summary: "让 Claude Code 以非交互方式运行的模式，适合脚本、命令行管道和 CI/CD 自动化。", use: "自动代码审查、流水线检查、多阶段 CI、批量文档生成、无人值守任务。", risk: "无人值守时必须设置预算、工具权限、输出格式、超时和审计日志。" },
+  { id: 78, title: "Agent SDK", tag: "框架", summary: "把 Claude Code 这类 Agent 能力作为可编程组件接入应用的开发接口。", use: "构建代码分析服务、自定义工具、会话管理、结构化输出、程序化权限控制。", risk: "SDK 让 Agent 进入真实系统，必须同时设计权限、参数校验、日志和安全防线。" },
+  { id: 79, title: "Plugins", tag: "工程", summary: "把 Skills、Hooks、Commands、Agents、MCP 等能力打包成可安装、可版本化、可分发的能力包。", use: "团队标准化工具包、内部插件市场、跨项目复用、组织级能力治理。", risk: "插件不是越大越好，应遵循单一职责、最小权限和清晰文档，否则难以维护和信任。" },
+  { id: 80, title: ".claudeignore", tag: "安全", summary: "用于控制 Claude Code 文件访问范围的忽略配置，帮助保护敏感文件和减少无关上下文。", use: "排除密钥、环境变量、构建产物、日志、私密数据和大型无关文件。", risk: "忽略配置不是完整安全边界，仍要配合权限模式、Hooks、代码审查和密钥治理。" }
 ];

@@ -1025,7 +1025,7 @@
     <main>
       <section class="hero page" id="top" data-page="top">
         <div class="hero-inner">
-          <div class="eyebrow">v1.3 HTML Prototype</div>
+          <div class="eyebrow">v1.4 HTML Prototype</div>
           <h2>把 AI 热词整理成一张能持续生长的学习地图</h2>
           <p class="hero-copy">这不是技术百科，而是一份适合快速理解、反复查阅、持续维护的手册。先用统一框架讲清楚概念，再用词条卡片和学习路线帮助你把知识串起来。</p>
           <div class="hero-actions">
@@ -1280,11 +1280,11 @@
             </ul>
           </article>
           <article class="chapter">
-            <small>v1.3</small>
-            <h3>生态与 Harness</h3>
+            <small>v1.4</small>
+            <h3>Claude Code Harness</h3>
             <ul>
-              <li>新增模型与产品生态</li>
-              <li>新增 Agent 工具生态与 Harness</li>
+              <li>引入《Claude Code 实战：Harness 工程之道》的工程知识</li>
+              <li>补充 CLAUDE.md、SubAgents、Hooks、Headless、Plugins 等词条</li>
             </ul>
           </article>
         </div>
@@ -2164,25 +2164,25 @@
             <div>
               <span class="module-kicker">13 / Agent Harness</span>
               <h3>Agent Harness</h3>
-              <p class="module-intro">这里的 Harness 是一种工程归纳，不是统一官方标准名。它可以理解为 Agent 的运行支架：不负责“变聪明”，而是负责让 Agent 按规则运行、留下过程、失败可恢复、结果可评估。</p>
+              <p class="module-intro">这里的 Harness 是一种工程归纳，不是统一官方标准名。它可以理解为模型外层的运行支架：不负责“变聪明”，而是把模型的能力接到工具、上下文、权限、事件、会话和工程流程上。</p>
             </div>
             <div class="module-detail-grid">
               <div class="module-detail">
                 <strong>是什么</strong>
-                <p class="lead">Agent Harness 是本文用来描述 Agent 运行支撑层的概念，包括任务协议、工具适配、状态管理、权限控制、评估和日志。</p>
+                <p class="lead">Agent Harness 是本文用来描述 Agent 运行支撑层的概念。一个实用公式是：Agent = Model + Harness。</p>
                 <ul>
                   <li>它是一种工程方法和归纳口径，不特指某个模型，也不是所有官方文档都会使用的统一术语。</li>
-                  <li>它也不同于 Harness 这家公司或平台；后者是具体 DevOps/AI 平台，前者是通用概念。</li>
-                  <li>一个好的 harness 会把“模型想做什么”和“系统允许做什么”分开处理。</li>
+                  <li>Claude Code 可以被理解为 Claude 模型外层的 Agentic Harness：它提供工具、上下文管理和执行环境，让语言模型变成 coding agent。</li>
+                  <li>一个好的 Harness 会把“模型想做什么”和“系统允许做什么”分开处理，再通过权限、Hooks 和日志形成工程闭环。</li>
                 </ul>
               </div>
               <div class="module-detail">
                 <strong>能力</strong>
                 <ul>
-                  <li>约束输入输出：让任务有固定输入、输出、状态和验收标准。</li>
-                  <li>管理工具：封装工具调用、参数校验、权限审批和结果回传。</li>
-                  <li>记录过程：保存计划、工具调用、错误、成本、耗时和人工接管点。</li>
-                  <li>恢复失败：失败后可以重试、降级、回滚或交给人处理。</li>
+                  <li>记忆层：用 CLAUDE.md 沉淀项目规范、技术栈、命令和团队约束。</li>
+                  <li>扩展层：用 Skills、SubAgents、Hooks 把专业知识、任务委派和系统拦截接进来。</li>
+                  <li>集成层：用 MCP、Headless 模式和 CI/CD 把 Agent 接到外部工具和自动化流水线。</li>
+                  <li>编程层：用 Agent SDK 把 Agent 能力封装成可编程组件。</li>
                 </ul>
               </div>
               <div class="module-detail">
@@ -2190,36 +2190,38 @@
                 <ul>
                   <li>AI Coding：让 Agent 在隔离环境中改代码、跑测试、产出变更摘要。</li>
                   <li>企业自动化：让 Agent 按流程调用系统，关键动作必须审批。</li>
-                  <li>RAG 问答：记录检索内容、引用来源和回答质量。</li>
-                  <li>多 Agent 协作：让不同 Agent 的交接、状态和输出保持一致。</li>
+                  <li>团队落地：把 CLAUDE.md、Skills、Hooks 和 MCP 配置变成团队共享资产。</li>
+                  <li>CI/CD 集成：在无人值守场景中执行代码审查、质量门控、审计和报告生成。</li>
                 </ul>
               </div>
               <div class="module-detail">
                 <strong>限制</strong>
                 <ul>
-                  <li>Harness 不能让错误模型变成可靠专家，只能提高过程可控性。</li>
-                  <li>过度复杂的 harness 会让系统难维护，简单任务不需要重型框架。</li>
-                  <li>如果验收标准本身模糊，再完整的日志也难判断结果是否正确。</li>
-                  <li>监控和日志可能包含敏感数据，需要访问控制和保留策略。</li>
+                  <li>CLAUDE.md 写得越长不一定越好，过多常驻规则会挤占上下文并降低遵循质量。</li>
+                  <li>SubAgents 能隔离噪声和权限，但也会增加任务拆解、信息传递和调试复杂度。</li>
+                  <li>Hooks 能强制拦截风险，但配置过严会阻塞正常开发，配置过松又守不住底线。</li>
+                  <li>Headless/CI 场景容易成本失控，必须设置预算、权限、超时和审计。</li>
                 </ul>
               </div>
               <div class="module-detail">
                 <strong>方法</strong>
                 <ul>
-                  <li>写清任务协议：目标、输入、可用工具、禁止动作、输出格式、完成标准。</li>
-                  <li>工具按风险分层：只读、可写、高风险、不可逆，并设置不同确认方式。</li>
-                  <li>建立运行记录：每一步为什么做、调用了什么、返回了什么、花了多少成本。</li>
-                  <li>设计失败路径：重试几次、何时降级、何时停止、何时转人工。</li>
+                  <li>先写好项目记忆：CLAUDE.md 只放必须常驻的 WHY、WHAT、HOW，不把长文档塞进去。</li>
+                  <li>再做按需知识：把代码审查、安全规范、文档生成这类专业流程封装成 Skills。</li>
+                  <li>复杂任务用 SubAgents 隔离输入噪声、输出噪声、长期上下文和高风险权限。</li>
+                  <li>关键动作上 Hooks：PreToolUse 做执行前拦截，PostToolUse 做审计与反馈，Stop 做质量门控。</li>
+                  <li>团队化时把能力打包为 Plugins，并用最小权限、版本管理和文档降低信任成本。</li>
                 </ul>
               </div>
               <div class="module-detail case">
                 <strong>案例</strong>
-                <p class="lead">案例：代码修复 Agent 的 harness。</p>
+                <p class="lead">案例：把 Claude Code 从个人工具升级为团队工程能力。</p>
                 <ul>
-                  <li>输入：GitHub issue、相关日志、仓库路径和验收标准。</li>
-                  <li>权限：允许读文件、改工作区、运行测试；禁止推送远端和修改生产配置。</li>
-                  <li>过程：先输出计划，人确认后修改；每次测试失败都记录原因。</li>
-                  <li>输出：改动文件、验证命令、失败残留、风险点和需要人工 Review 的位置。</li>
+                  <li>第 1 步：项目根目录维护精炼的 CLAUDE.md，写清技术栈、目录职责、常用命令和红线。</li>
+                  <li>第 2 步：把代码审查、安全扫描、文档生成等高频任务拆成 Skills 或 SubAgents。</li>
+                  <li>第 3 步：用 Hooks 拦截危险命令、敏感文件和未通过测试的输出。</li>
+                  <li>第 4 步：在 Headless/CI 中设置预算、权限白名单、结构化输出和审计日志。</li>
+                  <li>第 5 步：团队共用配置通过 Plugin 或项目级 .claude 目录版本化分发。</li>
                 </ul>
               </div>
             </div>
@@ -2230,6 +2232,7 @@
                 <li><a href="https://openai.github.io/openai-agents-python/tracing/" target="_blank" rel="noreferrer">OpenAI Agents SDK：Tracing</a></li>
                 <li><a href="https://developer.harness.io/docs/platform/harness-ai/harness-agents/" target="_blank" rel="noreferrer">Harness Developer Hub：Harness Agents</a></li>
                 <li><a href="https://arxiv.org/abs/2603.25723" target="_blank" rel="noreferrer">论文：Natural-Language Agent Harnesses</a></li>
+                <li>黄佳：《Claude Code 实战：Harness 工程之道》，人民邮电出版社，2026</li>
               </ul>
             </div>
           </article>
@@ -2386,7 +2389,7 @@
 
       <section class="section page" id="terms" data-page="terms">
         <div class="section-heading">
-          <h2>70 个核心词条</h2>
+          <h2>80 个核心词条</h2>
           <p>左侧用于快速查找，点击词条后在右侧展开详细解读。先看一句话，再看关键知识点、容易混淆的概念和落地检查。</p>
         </div>
         <div class="term-map" aria-label="核心词条关系图">
@@ -2421,13 +2424,13 @@
               <span class="map-node primary">Agent</span>
               <span class="map-node">Tool Use</span>
               <span class="map-node">MCP</span>
-              <span class="map-node">Skill</span>
+              <span class="map-node">Skill / SubAgents</span>
             </div>
             <div class="map-column">
               <strong>05 工程落地</strong>
               <span class="map-node primary">AI Coding</span>
-              <span class="map-node">Evaluation</span>
-              <span class="map-node">Observability</span>
+              <span class="map-node">CLAUDE.md</span>
+              <span class="map-node">Hooks / Headless</span>
               <span class="map-node">Agent Harness</span>
             </div>
           </div>
@@ -2470,7 +2473,7 @@
       </section>
 
       <footer>
-        AI 快速学习手册 v1.3。已新增模型产品生态、Agent 工具生态与 Agent Harness。
+        AI 快速学习手册 v1.4。已引入 Claude Code Harness 工程知识。
       </footer>
     </main>
   </div>
@@ -2609,9 +2612,9 @@
       "Agent": ["Tool Use", "Planning", "Memory", "Agent Harness"],
       "Tool Use": ["Function Calling", "MCP", "Tool Permission"],
       "MCP": ["Tool Use", "Skill", "Agent"],
-      "Skill": ["MCP", "Prompt", "Workflow"],
-      "AI Coding": ["Codebase Context", "Code Review", "Test Generation", "Codex"],
-      "Agentic Engineering": ["Evaluation", "Observability", "Rollback", "Agent Harness"],
+      "Skill": ["MCP", "Prompt", "Workflow", "CLAUDE.md"],
+      "AI Coding": ["Codebase Context", "Code Review", "Test Generation", "Codex", "CLAUDE.md"],
+      "Agentic Engineering": ["Evaluation", "Observability", "Rollback", "Agent Harness", "Hooks"],
       "ChatGPT": ["大语言模型", "Prompt", "结构化输出"],
       "Claude": ["Claude Code", "大语言模型", "上下文窗口"],
       "Gemini": ["多模态", "大语言模型", "模型与产品生态"],
@@ -2624,7 +2627,17 @@
       "CrewAI": ["Multi-agent", "Workflow", "Agent"],
       "LangChain": ["Tool Use", "Agent", "RAG"],
       "LlamaIndex": ["RAG", "Embedding", "知识库"],
-      "Agent Harness": ["Agent", "Evaluation", "Observability", "Rollback"]
+      "Agent Harness": ["Agent", "Agentic Loop", "CLAUDE.md", "SubAgents", "Hooks", "Headless Mode"],
+      "Agentic Loop": ["Agent", "Tool Use", "Observability", "Agent Harness"],
+      "CLAUDE.md": ["Codebase Context", "Context Engineering", "Skill", "AI Coding"],
+      "SubAgents": ["Agent", "Multi-agent", "Context Engineering", "Tool Permission"],
+      "Hooks": ["PreToolUse", "PostToolUse", "Audit Log", "Guardrails"],
+      "PreToolUse": ["Hooks", "Tool Permission", "Sandbox", ".claudeignore"],
+      "PostToolUse": ["Hooks", "Audit Log", "Observability", "Tracing"],
+      "Headless Mode": ["AI Coding", "Workflow", "Agent SDK", "Audit Log"],
+      "Agent SDK": ["Agent", "Tool Use", "结构化输出", "Headless Mode"],
+      "Plugins": ["Skill", "Hooks", "MCP", "SubAgents"],
+      ".claudeignore": ["Tool Permission", "Sandbox", "Prompt Injection", "Hooks"]
     };
 
     function getTermByTitle(title) {
